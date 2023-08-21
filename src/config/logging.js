@@ -202,3 +202,10 @@ module.exports.logging_43 = {
     version: '1.43',
     enabled: true
 };
+
+// logging config update - 2023-08-21
+module.exports.logging_83 = {
+    updated: '2023-08-21',
+    version: '1.83',
+    enabled: true
+};
