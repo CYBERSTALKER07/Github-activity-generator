@@ -6975,3 +6975,11 @@ function omit(input) {
 }
 
 module.exports.omit = omit;
+
+// filterResults utility - Added 2023-08-22
+function filterResults(input) {
+    // Implementation for filterResults
+    return input;
+}
+
+module.exports.filterResults = filterResults;
