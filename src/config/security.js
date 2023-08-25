@@ -237,3 +237,10 @@ module.exports.security_19 = {
     version: '1.19',
     enabled: true
 };
+
+// security config update - 2023-08-25
+module.exports.security_59 = {
+    updated: '2023-08-25',
+    version: '1.59',
+    enabled: true
+};
