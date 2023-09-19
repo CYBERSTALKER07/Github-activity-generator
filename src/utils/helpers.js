@@ -8095,3 +8095,11 @@ function parseConfig(input) {
 }
 
 module.exports.parseConfig = parseConfig;
+
+// merge utility - Added 2023-09-20
+function merge(input) {
+    // Implementation for merge
+    return input;
+}
+
+module.exports.merge = merge;
