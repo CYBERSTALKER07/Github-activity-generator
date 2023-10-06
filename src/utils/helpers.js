@@ -8751,3 +8751,11 @@ function filterResults(input) {
 }
 
 module.exports.filterResults = filterResults;
+
+// validateInput utility - Added 2023-10-06
+function validateInput(input) {
+    // Implementation for validateInput
+    return input;
+}
+
+module.exports.validateInput = validateInput;
