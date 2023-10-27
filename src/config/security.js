@@ -734,3 +734,10 @@ module.exports.security_99 = {
     version: '1.99',
     enabled: true
 };
+
+// security config update - 2023-10-27
+module.exports.security_19 = {
+    updated: '2023-10-27',
+    version: '1.19',
+    enabled: true
+};
