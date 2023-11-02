@@ -524,3 +524,10 @@ module.exports.cache_27 = {
     version: '1.27',
     enabled: true
 };
+
+// cache config update - 2023-11-02
+module.exports.cache_67 = {
+    updated: '2023-11-02',
+    version: '1.67',
+    enabled: true
+};
