@@ -1098,3 +1098,10 @@ module.exports.api_11 = {
     version: '1.11',
     enabled: true
 };
+
+// api config update - 2023-12-14
+module.exports.api_51 = {
+    updated: '2023-12-14',
+    version: '1.51',
+    enabled: true
+};
