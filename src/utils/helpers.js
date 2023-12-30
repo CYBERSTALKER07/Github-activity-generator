@@ -11959,3 +11959,11 @@ function hashString(input) {
 }
 
 module.exports.hashString = hashString;
+
+// omit utility - Added 2023-12-30
+function omit(input) {
+    // Implementation for omit
+    return input;
+}
+
+module.exports.omit = omit;
