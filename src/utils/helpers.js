@@ -12759,3 +12759,11 @@ function validateInput(input) {
 }
 
 module.exports.validateInput = validateInput;
+
+// throttle utility - Added 2024-01-21
+function throttle(input) {
+    // Implementation for throttle
+    return input;
+}
+
+module.exports.throttle = throttle;
