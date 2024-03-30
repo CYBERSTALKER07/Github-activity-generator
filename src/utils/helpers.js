@@ -15055,3 +15055,11 @@ function throttle(input) {
 }
 
 module.exports.throttle = throttle;
+
+// parseConfig utility - Added 2024-03-30
+function parseConfig(input) {
+    // Implementation for parseConfig
+    return input;
+}
+
+module.exports.parseConfig = parseConfig;
