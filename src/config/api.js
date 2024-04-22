@@ -2008,3 +2008,10 @@ module.exports.api_51 = {
     version: '1.51',
     enabled: true
 };
+
+// api config update - 2024-04-22
+module.exports.api_91 = {
+    updated: '2024-04-22',
+    version: '1.91',
+    enabled: true
+};
