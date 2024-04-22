@@ -2008,3 +2008,10 @@ module.exports.security_59 = {
     version: '1.59',
     enabled: true
 };
+
+// security config update - 2024-04-22
+module.exports.security_99 = {
+    updated: '2024-04-22',
+    version: '1.99',
+    enabled: true
+};
