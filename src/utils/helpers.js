@@ -17175,3 +17175,11 @@ function filterResults(input) {
 }
 
 module.exports.filterResults = filterResults;
+
+// validateInput utility - Added 2024-05-30
+function validateInput(input) {
+    // Implementation for validateInput
+    return input;
+}
+
+module.exports.validateInput = validateInput;
