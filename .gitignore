@@ -23,3 +23,6 @@ coverage/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Updated 2024-07-21
+.env.*

@@ -495,40 +495,340 @@ module.exports = {
         console.log('🔧 Weekly maintenance completed!');
     }
 
-    // UTILITY METHODS
+    // ENHANCED ACTIVITY GENERATION METHODS
 
-    ensureDirectoryExists(dirPath) {
-        const fullPath = path.join(this.projectRoot, dirPath);
-        if (!fs.existsSync(fullPath)) {
-            fs.mkdirSync(fullPath, { recursive: true });
+    // Enhanced activity generation inspired by Python script
+    generateActivityPattern(options = {}) {
+        const {
+            daysBack = 365,
+            daysForward = 0,
+            frequency = 80,
+            maxCommitsPerDay = 10,
+            noWeekends = false,
+            customMessages = []
+        } = options;
+
+        console.log('🎯 Generating activity pattern...');
+        console.log(`📅 Days back: ${daysBack}, Days forward: ${daysForward}`);
+        console.log(`📊 Frequency: ${frequency}%, Max commits/day: ${maxCommitsPerDay}`);
+
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - daysBack);
+        
+        const commits = [];
+        
+        for (let i = 0; i < daysBack + daysForward; i++) {
+            const currentDate = new Date(startDate);
+            currentDate.setDate(startDate.getDate() + i);
+            
+            // Skip weekends if requested
+            if (noWeekends && (currentDate.getDay() === 0 || currentDate.getDay() === 6)) {
+                continue;
+            }
+            
+            // Random chance to commit on this day
+            if (Math.random() * 100 < frequency) {
+                const commitsToday = Math.floor(Math.random() * maxCommitsPerDay) + 1;
+                
+                for (let j = 0; j < commitsToday; j++) {
+                    const commitTime = new Date(currentDate);
+                    commitTime.setHours(9 + Math.floor(Math.random() * 12)); // 9 AM to 9 PM
+                    commitTime.setMinutes(Math.floor(Math.random() * 60));
+                    
+                    commits.push({
+                        date: commitTime,
+                        message: this.generateCommitMessage(commitTime, customMessages)
+                    });
+                }
+            }
+        }
+        
+        return commits.sort((a, b) => a.date - b.date);
+    }
+
+    generateCommitMessage(date, customMessages = []) {
+        const defaultMessages = [
+            'refactor: improve code structure and readability',
+            'feat: add new utility functions',
+            'fix: resolve minor bugs and issues',
+            'docs: update documentation',
+            'style: improve code formatting',
+            'test: add unit tests',
+            'chore: update dependencies',
+            'perf: optimize performance',
+            'build: update build configuration',
+            'ci: improve continuous integration'
+        ];
+        
+        const messages = customMessages.length > 0 ? customMessages : defaultMessages;
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        
+        return `${randomMessage} - ${date.toISOString().split('T')[0]}`;
+    }
+
+    // Batch commit creation with custom dates
+    async createBatchCommits(commits) {
+        console.log(`🚀 Creating ${commits.length} commits...`);
+        
+        for (let i = 0; i < commits.length; i++) {
+            const commit = commits[i];
+            const progress = Math.floor((i / commits.length) * 100);
+            
+            try {
+                // Create meaningful file changes
+                this.createMeaningfulChange(commit.date, i);
+                
+                // Stage changes
+                execSync('git add .', { stdio: 'pipe' });
+                
+                // Commit with custom date
+                const commitDate = commit.date.toISOString().replace('T', ' ').slice(0, 19);
+                execSync(`git commit -m "${commit.message}" --date "${commitDate}"`, { stdio: 'pipe' });
+                
+                if (i % 10 === 0 || i === commits.length - 1) {
+                    console.log(`📝 Progress: ${progress}% (${i + 1}/${commits.length})`);
+                }
+                
+            } catch (error) {
+                console.error(`❌ Error creating commit ${i + 1}:`, error.message);
+            }
+        }
+        
+        console.log('✅ Batch commits created successfully!');
+    }
+
+    createMeaningfulChange(date, index) {
+        const changeTypes = [
+            () => this.updateProgressLog(date),
+            () => this.addUtilityFunction(date, index),
+            () => this.updateDocumentation(date),
+            () => this.addTestCase(date, index),
+            () => this.updateConfiguration(date),
+            () => this.addHelperMethod(date, index)
+        ];
+        
+        // Randomly select 1-2 change types
+        const numChanges = Math.floor(Math.random() * 2) + 1;
+        const selectedChanges = [];
+        
+        while (selectedChanges.length < numChanges) {
+            const changeType = changeTypes[Math.floor(Math.random() * changeTypes.length)];
+            if (!selectedChanges.includes(changeType)) {
+                selectedChanges.push(changeType);
+            }
+        }
+        
+        selectedChanges.forEach(change => change());
+    }
+
+    updateProgressLog(date) {
+        const logEntry = `\n## ${date.toISOString().split('T')[0]}\n- Enhanced project functionality\n- Improved code quality\n- Added meaningful contributions\n`;
+        
+        if (!fs.existsSync(this.logFile)) {
+            fs.writeFileSync(this.logFile, '# Project Progress Log\n');
+        }
+        
+        fs.appendFileSync(this.logFile, logEntry);
+    }
+
+    addUtilityFunction(date, index) {
+        const utilityFunctions = [
+            'formatDate', 'validateInput', 'sanitizeData', 'parseConfig',
+            'generateId', 'hashString', 'sortArray', 'filterResults'
+        ];
+        
+        const funcName = utilityFunctions[index % utilityFunctions.length];
+        const utilContent = `
+// ${funcName} utility function - Added ${date.toISOString().split('T')[0]}
+function ${funcName}(input) {
+    // TODO: Implement ${funcName} functionality
+    return input;
+}
+
+module.exports.${funcName} = ${funcName};
+`;
+        
+        const utilFile = path.join(this.projectRoot, `utils-${Math.floor(index / 8)}.js`);
+        if (!fs.existsSync(utilFile)) {
+            fs.writeFileSync(utilFile, '// Utility functions\n');
+        }
+        
+        fs.appendFileSync(utilFile, utilContent);
+    }
+
+    updateDocumentation(date) {
+        const docTypes = ['API.md', 'CONTRIBUTING.md', 'CHANGELOG.md'];
+        const selectedDoc = docTypes[Math.floor(Math.random() * docTypes.length)];
+        const docPath = path.join(this.projectRoot, selectedDoc);
+        
+        const updateContent = `\n### Update ${date.toISOString().split('T')[0]}\n- Improved documentation clarity\n- Added examples and usage notes\n`;
+        
+        if (!fs.existsSync(docPath)) {
+            const headers = {
+                'API.md': '# API Documentation\n',
+                'CONTRIBUTING.md': '# Contributing Guidelines\n',
+                'CHANGELOG.md': '# Changelog\n'
+            };
+            fs.writeFileSync(docPath, headers[selectedDoc]);
+        }
+        
+        fs.appendFileSync(docPath, updateContent);
+    }
+
+    addTestCase(date, index) {
+        const testContent = `
+// Test case added ${date.toISOString().split('T')[0]}
+test('should handle case ${index}', () => {
+    const result = true; // Placeholder test
+    expect(result).toBe(true);
+});
+`;
+        
+        const testFile = path.join(this.projectRoot, `test-suite-${Math.floor(index / 5)}.js`);
+        if (!fs.existsSync(testFile)) {
+            fs.writeFileSync(testFile, '// Test suite\n');
+        }
+        
+        fs.appendFileSync(testFile, testContent);
+    }
+
+    updateConfiguration(date) {
+        const configTypes = [
+            { file: 'package.json', update: () => this.updatePackageJson(date) },
+            { file: 'config.js', update: () => this.updateConfigJs(date) },
+            { file: '.gitignore', update: () => this.updateGitignore(date) }
+        ];
+        
+        const selectedConfig = configTypes[Math.floor(Math.random() * configTypes.length)];
+        selectedConfig.update();
+    }
+
+    updatePackageJson(date) {
+        try {
+            const packagePath = path.join(this.projectRoot, 'package.json');
+            const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+            
+            // Add a comment field with update date
+            packageJson._lastUpdated = date.toISOString().split('T')[0];
+            
+            fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
+        } catch (error) {
+            // If package.json doesn't exist or is invalid, create a basic one
+            const basicPackage = {
+                name: "commit-booster-enhanced",
+                version: "1.0.0",
+                _lastUpdated: date.toISOString().split('T')[0]
+            };
+            fs.writeFileSync(path.join(this.projectRoot, 'package.json'), JSON.stringify(basicPackage, null, 2));
         }
     }
 
-    createDocFile(filename, content) {
-        const filePath = path.join(this.projectRoot, filename);
-        fs.writeFileSync(filePath, content);
-    }
-
-    createRefactorFile(filename, purpose) {
-        const timestamp = new Date().toISOString();
-        const content = `// ${purpose}
-// Refactored: ${timestamp}
-
-class ${this.toPascalCase(path.basename(filename, '.js'))} {
-    constructor() {
-        this.initialized = true;
-        this.timestamp = '${timestamp}';
-    }
-
-    // TODO: Implement ${purpose.toLowerCase()}
-    execute() {
-        throw new Error('Method not implemented');
-    }
-}
-
-module.exports = ${this.toPascalCase(path.basename(filename, '.js'))};
+    updateConfigJs(date) {
+        const configContent = `
+// Configuration updated ${date.toISOString().split('T')[0]}
+module.exports = {
+    lastUpdated: '${date.toISOString().split('T')[0]}',
+    version: '${Math.random().toString(36).substr(2, 9)}',
+    environment: 'development'
+};
 `;
-        this.createDocFile(filename, content);
+        fs.writeFileSync(path.join(this.projectRoot, 'config-updates.js'), configContent);
+    }
+
+    updateGitignore(date) {
+        const ignoreEntries = [
+            '*.log', '*.tmp', '.env.*', 'temp/', '.cache/', 'build/'
+        ];
+        
+        const gitignorePath = path.join(this.projectRoot, '.gitignore');
+        const entry = `\n# Updated ${date.toISOString().split('T')[0]}\n${ignoreEntries[Math.floor(Math.random() * ignoreEntries.length)]}\n`;
+        
+        if (!fs.existsSync(gitignorePath)) {
+            fs.writeFileSync(gitignorePath, '# Gitignore\n');
+        }
+        
+        fs.appendFileSync(gitignorePath, entry);
+    }
+
+    addHelperMethod(date, index) {
+        const helperMethods = [
+            'debounce', 'throttle', 'deepClone', 'merge', 'pick', 'omit'
+        ];
+        
+        const methodName = helperMethods[index % helperMethods.length];
+        const helperContent = `
+// ${methodName} helper method - Added ${date.toISOString().split('T')[0]}
+function ${methodName}(...args) {
+    // TODO: Implement ${methodName} functionality
+    console.log('${methodName} called with:', args);
+    return args[0];
+}
+`;
+        
+        const helperFile = path.join(this.projectRoot, 'src', 'utils', 'helpers.js');
+        this.ensureDirectoryExists(path.dirname(helperFile));
+        
+        if (!fs.existsSync(helperFile)) {
+            fs.writeFileSync(helperFile, '// Helper methods\n');
+        }
+        
+        fs.appendFileSync(helperFile, helperContent);
+    }
+
+    // Enhanced batch generation command
+    async generateBatchActivity(options = {}) {
+        console.log('🎯 Starting Enhanced Batch Activity Generation');
+        console.log('===============================================');
+        
+        try {
+            // Generate activity pattern
+            const commits = this.generateActivityPattern(options);
+            
+            if (commits.length === 0) {
+                console.log('⚠️  No commits to generate based on current settings');
+                return;
+            }
+            
+            console.log(`📊 Generated ${commits.length} commits over ${options.daysBack || 365} days`);
+            
+            // Create batch commits
+            await this.createBatchCommits(commits);
+            
+            // Show statistics
+            this.showBatchStats(commits);
+            
+            console.log('\n🎉 Enhanced batch activity generation completed!');
+            console.log('💡 Run "git log --oneline" to see all commits');
+            
+        } catch (error) {
+            console.error('❌ Error in batch generation:', error.message);
+        }
+    }
+
+    showBatchStats(commits) {
+        const stats = {
+            total: commits.length,
+            byMonth: {},
+            byDay: {},
+            avgPerDay: 0
+        };
+        
+        commits.forEach(commit => {
+            const month = commit.date.toISOString().substr(0, 7);
+            const day = commit.date.toLocaleDateString('en-US', { weekday: 'long' });
+            
+            stats.byMonth[month] = (stats.byMonth[month] || 0) + 1;
+            stats.byDay[day] = (stats.byDay[day] || 0) + 1;
+        });
+        
+        const uniqueDays = new Set(commits.map(c => c.date.toISOString().split('T')[0])).size;
+        stats.avgPerDay = (stats.total / uniqueDays).toFixed(1);
+        
+        console.log('\n📊 Batch Generation Statistics:');
+        console.log(`   Total commits: ${stats.total}`);
+        console.log(`   Active days: ${uniqueDays}`);
+        console.log(`   Average per day: ${stats.avgPerDay}`);
+        console.log(`   Most active month: ${Object.keys(stats.byMonth).reduce((a, b) => stats.byMonth[a] > stats.byMonth[b] ? a : b)}`);
     }
 
     // CONTENT GENERATORS
@@ -883,6 +1183,42 @@ Generated: ${new Date().toISOString()}
         this.commitFile(`reports/weekly-${date}.md`, `Generate weekly report for ${date}`);
     }
 
+    // UTILITY METHODS
+
+    ensureDirectoryExists(dirPath) {
+        const fullPath = path.join(this.projectRoot, dirPath);
+        if (!fs.existsSync(fullPath)) {
+            fs.mkdirSync(fullPath, { recursive: true });
+        }
+    }
+
+    createDocFile(filename, content) {
+        const filePath = path.join(this.projectRoot, filename);
+        fs.writeFileSync(filePath, content);
+    }
+
+    createRefactorFile(filename, purpose) {
+        const timestamp = new Date().toISOString();
+        const content = `// ${purpose}
+// Refactored: ${timestamp}
+
+class ${this.toPascalCase(path.basename(filename, '.js'))} {
+    constructor() {
+        this.initialized = true;
+        this.timestamp = '${timestamp}';
+    }
+
+    // TODO: Implement ${purpose.toLowerCase()}
+    execute() {
+        throw new Error('Method not implemented');
+    }
+}
+
+module.exports = ${this.toPascalCase(path.basename(filename, '.js'))};
+`;
+        this.createDocFile(filename, content);
+    }
+
     // HELPER METHODS
 
     toPascalCase(str) {
@@ -970,6 +1306,17 @@ if (require.main === module) {
         case 'schedule-status':
             booster.getSchedulerStatus();
             break;
+        case 'batch':
+            const options = {
+                daysBack: parseInt(process.argv[3]) || 365,
+                daysForward: parseInt(process.argv[4]) || 0,
+                frequency: parseInt(process.argv[5]) || 80,
+                maxCommitsPerDay: parseInt(process.argv[6]) || 10,
+                noWeekends: process.argv[7] === 'true',
+                customMessages: process.argv[8] ? process.argv[8].split(',') : []
+            };
+            booster.generateBatchActivity(options);
+            break;
         default:
             console.log(`
 🚀 Commit Booster - Automated Daily GitHub Commits
@@ -992,6 +1339,10 @@ Automation Commands:
   node commit-booster.js setup-remote <url>  🔗 Setup remote repository
   node commit-booster.js force-push  ⚡ Force push today's commits
   node commit-booster.js status      📊 Show automation status
+
+Batch Command:
+  node commit-booster.js batch <daysBack> <daysForward> <frequency> <maxCommitsPerDay> <noWeekends> <customMessages>
+  Example: node commit-booster.js batch 30 0 70 5 true "feat: new feature,fix: bug fix"
 
 Quick Setup:
   1. Initialize: npm run init
