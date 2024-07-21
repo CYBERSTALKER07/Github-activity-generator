@@ -14,3 +14,10 @@ class Helpers {
 }
 
 module.exports = Helpers;
+
+// throttle helper method - Added 2024-07-21
+function throttle(...args) {
+    // TODO: Implement throttle functionality
+    console.log('throttle called with:', args);
+    return args[0];
+}
