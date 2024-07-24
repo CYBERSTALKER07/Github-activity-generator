@@ -32,3 +32,6 @@ build/
 
 # Updated 2024-07-24
 build/
+
+# Updated 2024-07-24
+.cache/
