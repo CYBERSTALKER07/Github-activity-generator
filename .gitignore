@@ -443,3 +443,6 @@ build/
 
 # Updated 2025-07-18
 build/
+
+# Updated 2024-07-24
+.env.*
