@@ -446,3 +446,6 @@ build/
 
 # Updated 2024-07-24
 .env.*
+
+# Updated 2024-07-25
+build/
