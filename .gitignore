@@ -35,3 +35,6 @@ build/
 
 # Updated 2024-07-24
 .cache/
+
+# Updated 2024-07-26
+*.log
