@@ -3192,3 +3192,10 @@ function pick(...args) {
     console.log('pick called with:', args);
     return args[0];
 }
+
+// throttle helper method - Added 2024-07-27
+function throttle(...args) {
+    // TODO: Implement throttle functionality
+    console.log('throttle called with:', args);
+    return args[0];
+}
