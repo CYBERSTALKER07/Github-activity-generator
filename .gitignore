@@ -470,3 +470,6 @@ build/
 
 # Updated 2024-08-02
 *.tmp
+
+# Updated 2024-08-02
+.cache/
