@@ -39,3 +39,11 @@ function validateInput(input) {
 }
 
 module.exports.validateInput = validateInput;
+
+// sortArray utility function - Added 2024-08-15
+function sortArray(input) {
+    // TODO: Implement sortArray functionality
+    return input;
+}
+
+module.exports.sortArray = sortArray;
