@@ -19975,3 +19975,11 @@ function omit(input) {
 }
 
 module.exports.omit = omit;
+
+// filterResults utility - Added 2024-08-17
+function filterResults(input) {
+    // Implementation for filterResults
+    return input;
+}
+
+module.exports.filterResults = filterResults;
