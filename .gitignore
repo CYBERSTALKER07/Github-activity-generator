@@ -479,3 +479,6 @@ build/
 
 # Updated 2024-08-07
 build/
+
+# Updated 2024-08-27
+*.tmp
