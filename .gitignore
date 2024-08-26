@@ -47,3 +47,6 @@ build/
 
 # Updated 2024-08-24
 *.tmp
+
+# Updated 2024-08-26
+temp/
