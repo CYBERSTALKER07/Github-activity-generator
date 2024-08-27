@@ -482,3 +482,6 @@ build/
 
 # Updated 2024-08-27
 *.tmp
+
+# Updated 2024-08-27
+build/
