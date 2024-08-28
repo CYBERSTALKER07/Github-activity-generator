@@ -53,3 +53,6 @@ temp/
 
 # Updated 2024-08-27
 *.log
+
+# Updated 2024-08-28
+build/
