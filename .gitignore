@@ -488,3 +488,6 @@ build/
 
 # Updated 2024-08-29
 .env.*
+
+# Updated 2024-08-29
+*.log
