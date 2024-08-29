@@ -485,3 +485,6 @@ build/
 
 # Updated 2024-08-27
 build/
+
+# Updated 2024-08-29
+.env.*
