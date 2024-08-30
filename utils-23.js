@@ -15,3 +15,11 @@ function filterResults(input) {
 }
 
 module.exports.filterResults = filterResults;
+
+// formatDate utility function - Added 2024-08-30
+function formatDate(input) {
+    // TODO: Implement formatDate functionality
+    return input;
+}
+
+module.exports.formatDate = formatDate;
