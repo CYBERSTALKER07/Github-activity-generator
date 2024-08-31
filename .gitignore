@@ -491,3 +491,6 @@ build/
 
 # Updated 2024-08-29
 *.log
+
+# Updated 2024-08-31
+.cache/
