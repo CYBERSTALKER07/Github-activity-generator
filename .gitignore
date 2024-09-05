@@ -65,3 +65,6 @@ build/
 
 # Updated 2024-09-05
 *.log
+
+# Updated 2024-09-05
+.env.*
