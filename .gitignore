@@ -68,3 +68,6 @@ build/
 
 # Updated 2024-09-05
 .env.*
+
+# Updated 2024-09-05
+.cache/
