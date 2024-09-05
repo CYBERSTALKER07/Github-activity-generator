@@ -62,3 +62,6 @@ build/
 
 # Updated 2024-09-04
 *.tmp
+
+# Updated 2024-09-05
+*.log
