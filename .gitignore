@@ -503,3 +503,6 @@ build/
 
 # Updated 2024-09-08
 temp/
+
+# Updated 2024-09-08
+*.log
