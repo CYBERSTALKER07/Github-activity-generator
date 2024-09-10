@@ -74,3 +74,6 @@ build/
 
 # Updated 2024-09-09
 build/
+
+# Updated 2024-09-10
+*.log
