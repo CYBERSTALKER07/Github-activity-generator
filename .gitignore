@@ -512,3 +512,6 @@ temp/
 
 # Updated 2024-09-12
 temp/
+
+# Updated 2024-09-13
+.cache/
