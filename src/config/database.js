@@ -2036,3 +2036,10 @@ module.exports.database_35 = {
     version: '1.35',
     enabled: true
 };
+
+// database config update - 2024-09-14
+module.exports.database_75 = {
+    updated: '2024-09-14',
+    version: '1.75',
+    enabled: true
+};
