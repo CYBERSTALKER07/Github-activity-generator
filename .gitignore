@@ -83,3 +83,6 @@ build/
 
 # Updated 2024-09-14
 *.tmp
+
+# Updated 2024-09-18
+*.tmp
