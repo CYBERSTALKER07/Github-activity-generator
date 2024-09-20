@@ -3570,3 +3570,10 @@ function omit(...args) {
     console.log('omit called with:', args);
     return args[0];
 }
+
+// deepClone helper method - Added 2024-09-20
+function deepClone(...args) {
+    // TODO: Implement deepClone functionality
+    console.log('deepClone called with:', args);
+    return args[0];
+}
