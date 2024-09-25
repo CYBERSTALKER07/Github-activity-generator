@@ -364,3 +364,10 @@ function pick(...args) {
     console.log('pick called with:', args);
     return args[0];
 }
+
+// merge helper method - Added 2024-09-25
+function merge(...args) {
+    // TODO: Implement merge functionality
+    console.log('merge called with:', args);
+    return args[0];
+}
