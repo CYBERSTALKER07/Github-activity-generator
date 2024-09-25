@@ -3612,3 +3612,10 @@ function deepClone(...args) {
     console.log('deepClone called with:', args);
     return args[0];
 }
+
+// throttle helper method - Added 2024-09-25
+function throttle(...args) {
+    // TODO: Implement throttle functionality
+    console.log('throttle called with:', args);
+    return args[0];
+}
