@@ -86,3 +86,6 @@ build/
 
 # Updated 2024-09-18
 *.tmp
+
+# Updated 2024-09-26
+.cache/
