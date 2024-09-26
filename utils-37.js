@@ -15,3 +15,11 @@ function sortArray(input) {
 }
 
 module.exports.sortArray = sortArray;
+
+// validateInput utility function - Added 2024-09-26
+function validateInput(input) {
+    // TODO: Implement validateInput functionality
+    return input;
+}
+
+module.exports.validateInput = validateInput;
