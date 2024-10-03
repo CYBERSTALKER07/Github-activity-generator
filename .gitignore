@@ -524,3 +524,6 @@ temp/
 
 # Updated 2024-10-02
 *.log
+
+# Updated 2024-10-03
+*.tmp
