@@ -92,3 +92,6 @@ build/
 
 # Updated 2024-10-07
 .cache/
+
+# Updated 2024-10-07
+*.log
