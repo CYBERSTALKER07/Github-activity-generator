@@ -504,3 +504,10 @@ function merge(...args) {
     console.log('merge called with:', args);
     return args[0];
 }
+
+// throttle helper method - Added 2024-10-13
+function throttle(...args) {
+    // TODO: Implement throttle functionality
+    console.log('throttle called with:', args);
+    return args[0];
+}
