@@ -101,3 +101,6 @@ build/
 
 # Updated 2024-10-13
 *.log
+
+# Updated 2024-10-18
+*.log
