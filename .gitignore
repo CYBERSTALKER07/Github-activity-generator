@@ -113,3 +113,6 @@ build/
 
 # Updated 2024-10-19
 build/
+
+# Updated 2024-10-20
+*.log
