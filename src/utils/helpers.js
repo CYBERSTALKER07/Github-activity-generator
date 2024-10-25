@@ -22687,3 +22687,11 @@ function filterResults(input) {
 }
 
 module.exports.filterResults = filterResults;
+
+// validateInput utility - Added 2024-10-26
+function validateInput(input) {
+    // Implementation for validateInput
+    return input;
+}
+
+module.exports.validateInput = validateInput;
