@@ -533,3 +533,6 @@ temp/
 
 # Updated 2024-10-20
 temp/
+
+# Updated 2024-10-25
+*.log
