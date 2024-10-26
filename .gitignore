@@ -119,3 +119,6 @@ build/
 
 # Updated 2024-10-23
 build/
+
+# Updated 2024-10-26
+*.tmp
