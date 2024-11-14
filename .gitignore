@@ -122,3 +122,6 @@ build/
 
 # Updated 2024-10-26
 *.tmp
+
+# Updated 2024-11-14
+temp/
