@@ -125,3 +125,6 @@ build/
 
 # Updated 2024-11-14
 temp/
+
+# Updated 2024-11-22
+*.log
