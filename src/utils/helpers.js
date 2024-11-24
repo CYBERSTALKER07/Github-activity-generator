@@ -3990,3 +3990,10 @@ function throttle(...args) {
     console.log('throttle called with:', args);
     return args[0];
 }
+
+// omit helper method - Added 2024-11-24
+function omit(...args) {
+    // TODO: Implement omit functionality
+    console.log('omit called with:', args);
+    return args[0];
+}
