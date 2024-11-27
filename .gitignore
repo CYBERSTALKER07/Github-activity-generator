@@ -548,3 +548,6 @@ temp/
 
 # Updated 2024-11-20
 temp/
+
+# Updated 2024-11-27
+.cache/
