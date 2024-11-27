@@ -131,3 +131,6 @@ temp/
 
 # Updated 2024-11-22
 temp/
+
+# Updated 2024-11-27
+.env.*
