@@ -7,3 +7,11 @@ function parseConfig(input) {
 }
 
 module.exports.parseConfig = parseConfig;
+
+// validateInput utility function - Added 2024-11-27
+function validateInput(input) {
+    // TODO: Implement validateInput functionality
+    return input;
+}
+
+module.exports.validateInput = validateInput;
