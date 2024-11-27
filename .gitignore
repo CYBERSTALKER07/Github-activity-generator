@@ -551,3 +551,6 @@ temp/
 
 # Updated 2024-11-27
 .cache/
+
+# Updated 2024-11-27
+.env.*
