@@ -554,3 +554,6 @@ temp/
 
 # Updated 2024-11-27
 .env.*
+
+# Updated 2024-11-28
+*.log
