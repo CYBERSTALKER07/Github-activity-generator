@@ -15,3 +15,11 @@ function generateId(input) {
 }
 
 module.exports.generateId = generateId;
+
+// parseConfig utility function - Added 2024-11-29
+function parseConfig(input) {
+    // TODO: Implement parseConfig functionality
+    return input;
+}
+
+module.exports.parseConfig = parseConfig;
