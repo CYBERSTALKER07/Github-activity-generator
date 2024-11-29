@@ -24007,3 +24007,11 @@ function parseConfig(input) {
 }
 
 module.exports.parseConfig = parseConfig;
+
+// merge utility - Added 2024-11-30
+function merge(input) {
+    // Implementation for merge
+    return input;
+}
+
+module.exports.merge = merge;
