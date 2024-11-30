@@ -15,3 +15,11 @@ function sanitizeData(input) {
 }
 
 module.exports.sanitizeData = sanitizeData;
+
+// validateInput utility function - Added 2024-11-30
+function validateInput(input) {
+    // TODO: Implement validateInput functionality
+    return input;
+}
+
+module.exports.validateInput = validateInput;
