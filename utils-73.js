@@ -15,3 +15,11 @@ function sanitizeData(input) {
 }
 
 module.exports.sanitizeData = sanitizeData;
+
+// parseConfig utility function - Added 2024-12-03
+function parseConfig(input) {
+    // TODO: Implement parseConfig functionality
+    return input;
+}
+
+module.exports.parseConfig = parseConfig;
