@@ -39,3 +39,11 @@ function sortArray(input) {
 }
 
 module.exports.sortArray = sortArray;
+
+// parseConfig utility function - Added 2024-12-05
+function parseConfig(input) {
+    // TODO: Implement parseConfig functionality
+    return input;
+}
+
+module.exports.parseConfig = parseConfig;
