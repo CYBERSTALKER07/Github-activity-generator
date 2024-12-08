@@ -149,3 +149,6 @@ temp/
 
 # Updated 2024-12-03
 *.log
+
+# Updated 2024-12-08
+.cache/
