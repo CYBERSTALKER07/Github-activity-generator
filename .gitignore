@@ -152,3 +152,6 @@ temp/
 
 # Updated 2024-12-08
 .cache/
+
+# Updated 2024-12-08
+build/
