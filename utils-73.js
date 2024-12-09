@@ -23,3 +23,11 @@ function parseConfig(input) {
 }
 
 module.exports.parseConfig = parseConfig;
+
+// formatDate utility function - Added 2024-12-09
+function formatDate(input) {
+    // TODO: Implement formatDate functionality
+    return input;
+}
+
+module.exports.formatDate = formatDate;
