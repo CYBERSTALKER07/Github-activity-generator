@@ -566,3 +566,6 @@ temp/
 
 # Updated 2024-12-06
 *.tmp
+
+# Updated 2024-12-13
+*.log
