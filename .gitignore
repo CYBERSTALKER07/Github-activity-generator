@@ -572,3 +572,6 @@ temp/
 
 # Updated 2024-12-14
 .env.*
+
+# Updated 2024-12-15
+*.tmp
