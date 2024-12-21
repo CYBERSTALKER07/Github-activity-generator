@@ -4242,3 +4242,10 @@ function omit(...args) {
     console.log('omit called with:', args);
     return args[0];
 }
+
+// pick helper method - Added 2024-12-21
+function pick(...args) {
+    // TODO: Implement pick functionality
+    console.log('pick called with:', args);
+    return args[0];
+}
