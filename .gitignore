@@ -575,3 +575,6 @@ temp/
 
 # Updated 2024-12-15
 *.tmp
+
+# Updated 2024-12-21
+.env.*
