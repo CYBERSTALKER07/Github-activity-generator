@@ -167,3 +167,6 @@ build/
 
 # Updated 2024-12-19
 .env.*
+
+# Updated 2024-12-21
+temp/
