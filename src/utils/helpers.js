@@ -1176,3 +1176,10 @@ function debounce(...args) {
     console.log('debounce called with:', args);
     return args[0];
 }
+
+// throttle helper method - Added 2024-12-24
+function throttle(...args) {
+    // TODO: Implement throttle functionality
+    console.log('throttle called with:', args);
+    return args[0];
+}
