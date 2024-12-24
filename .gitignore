@@ -581,3 +581,6 @@ temp/
 
 # Updated 2024-12-21
 *.tmp
+
+# Updated 2024-12-24
+.cache/
