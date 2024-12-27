@@ -4312,3 +4312,10 @@ function deepClone(...args) {
     console.log('deepClone called with:', args);
     return args[0];
 }
+
+// debounce helper method - Added 2024-12-27
+function debounce(...args) {
+    // TODO: Implement debounce functionality
+    console.log('debounce called with:', args);
+    return args[0];
+}
