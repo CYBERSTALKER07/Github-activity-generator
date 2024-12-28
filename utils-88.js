@@ -15,3 +15,11 @@ function sanitizeData(input) {
 }
 
 module.exports.sanitizeData = sanitizeData;
+
+// sortArray utility function - Added 2024-12-29
+function sortArray(input) {
+    // TODO: Implement sortArray functionality
+    return input;
+}
+
+module.exports.sortArray = sortArray;
