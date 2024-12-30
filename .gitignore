@@ -173,3 +173,6 @@ temp/
 
 # Updated 2024-12-22
 *.log
+
+# Updated 2024-12-31
+build/
