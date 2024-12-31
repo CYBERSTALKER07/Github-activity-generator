@@ -596,3 +596,6 @@ temp/
 
 # Updated 2024-12-30
 temp/
+
+# Updated 2024-12-31
+*.tmp
