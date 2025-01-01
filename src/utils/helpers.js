@@ -4382,3 +4382,10 @@ function debounce(...args) {
     console.log('debounce called with:', args);
     return args[0];
 }
+
+// merge helper method - Added 2025-01-01
+function merge(...args) {
+    // TODO: Implement merge functionality
+    console.log('merge called with:', args);
+    return args[0];
+}
