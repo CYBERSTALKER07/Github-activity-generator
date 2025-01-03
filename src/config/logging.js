@@ -3926,3 +3926,10 @@ module.exports.logging_83 = {
     version: '1.83',
     enabled: true
 };
+
+// logging config update - 2025-01-03
+module.exports.logging_3 = {
+    updated: '2025-01-03',
+    version: '1.3',
+    enabled: true
+};
