@@ -602,3 +602,6 @@ temp/
 
 # Updated 2025-01-02
 .env.*
+
+# Updated 2025-01-04
+*.log
