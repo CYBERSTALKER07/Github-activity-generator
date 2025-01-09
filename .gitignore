@@ -188,3 +188,6 @@ temp/
 
 # Updated 2025-01-06
 temp/
+
+# Updated 2025-01-09
+*.tmp
