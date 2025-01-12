@@ -608,3 +608,6 @@ temp/
 
 # Updated 2025-01-11
 .env.*
+
+# Updated 2025-01-12
+.cache/
