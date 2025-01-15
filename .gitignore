@@ -611,3 +611,6 @@ temp/
 
 # Updated 2025-01-12
 .cache/
+
+# Updated 2025-01-16
+*.log
