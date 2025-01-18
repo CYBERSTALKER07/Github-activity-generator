@@ -200,3 +200,6 @@ temp/
 
 # Updated 2025-01-16
 .env.*
+
+# Updated 2025-01-18
+*.tmp
