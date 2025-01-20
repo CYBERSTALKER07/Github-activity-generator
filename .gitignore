@@ -203,3 +203,6 @@ temp/
 
 # Updated 2025-01-18
 *.tmp
+
+# Updated 2025-01-21
+*.tmp
