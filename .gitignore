@@ -626,3 +626,6 @@ temp/
 
 # Updated 2025-01-19
 .env.*
+
+# Updated 2025-01-24
+temp/
