@@ -212,3 +212,6 @@ build/
 
 # Updated 2025-01-23
 temp/
+
+# Updated 2025-01-25
+.env.*
