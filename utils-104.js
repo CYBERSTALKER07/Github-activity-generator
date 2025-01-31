@@ -15,3 +15,11 @@ function validateInput(input) {
 }
 
 module.exports.validateInput = validateInput;
+
+// hashString utility function - Added 2025-01-31
+function hashString(input) {
+    // TODO: Implement hashString functionality
+    return input;
+}
+
+module.exports.hashString = hashString;
