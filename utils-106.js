@@ -15,3 +15,11 @@ function generateId(input) {
 }
 
 module.exports.generateId = generateId;
+
+// sanitizeData utility function - Added 2025-02-03
+function sanitizeData(input) {
+    // TODO: Implement sanitizeData functionality
+    return input;
+}
+
+module.exports.sanitizeData = sanitizeData;
