@@ -31,3 +31,11 @@ function generateId(input) {
 }
 
 module.exports.generateId = generateId;
+
+// sortArray utility function - Added 2025-02-04
+function sortArray(input) {
+    // TODO: Implement sortArray functionality
+    return input;
+}
+
+module.exports.sortArray = sortArray;
