@@ -23,3 +23,11 @@ function sortArray(input) {
 }
 
 module.exports.sortArray = sortArray;
+
+// filterResults utility function - Added 2025-02-05
+function filterResults(input) {
+    // TODO: Implement filterResults functionality
+    return input;
+}
+
+module.exports.filterResults = filterResults;
