@@ -230,3 +230,6 @@ temp/
 
 # Updated 2025-02-06
 *.tmp
+
+# Updated 2025-02-06
+*.log
