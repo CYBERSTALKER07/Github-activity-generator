@@ -242,3 +242,6 @@ temp/
 
 # Updated 2025-02-11
 *.log
+
+# Updated 2025-02-12
+.cache/
