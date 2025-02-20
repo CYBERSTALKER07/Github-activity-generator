@@ -647,3 +647,6 @@ build/
 
 # Updated 2025-02-17
 temp/
+
+# Updated 2025-02-20
+.cache/
