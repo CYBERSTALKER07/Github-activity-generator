@@ -7,3 +7,11 @@ function sanitizeData(input) {
 }
 
 module.exports.sanitizeData = sanitizeData;
+
+// validateInput utility function - Added 2025-02-22
+function validateInput(input) {
+    // TODO: Implement validateInput functionality
+    return input;
+}
+
+module.exports.validateInput = validateInput;
