@@ -653,3 +653,6 @@ temp/
 
 # Updated 2025-02-20
 build/
+
+# Updated 2025-02-22
+.env.*
