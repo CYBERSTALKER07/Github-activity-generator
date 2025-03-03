@@ -260,3 +260,6 @@ temp/
 
 # Updated 2025-03-02
 temp/
+
+# Updated 2025-03-04
+*.tmp
