@@ -662,3 +662,6 @@ build/
 
 # Updated 2025-02-28
 *.log
+
+# Updated 2025-03-06
+temp/
