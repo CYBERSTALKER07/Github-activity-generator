@@ -263,3 +263,6 @@ temp/
 
 # Updated 2025-03-04
 *.tmp
+
+# Updated 2025-03-07
+*.log
