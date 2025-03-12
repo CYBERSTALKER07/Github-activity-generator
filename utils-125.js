@@ -39,3 +39,11 @@ function hashString(input) {
 }
 
 module.exports.hashString = hashString;
+
+// sanitizeData utility function - Added 2025-03-12
+function sanitizeData(input) {
+    // TODO: Implement sanitizeData functionality
+    return input;
+}
+
+module.exports.sanitizeData = sanitizeData;
