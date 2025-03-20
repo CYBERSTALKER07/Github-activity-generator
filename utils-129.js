@@ -23,3 +23,11 @@ function sortArray(input) {
 }
 
 module.exports.sortArray = sortArray;
+
+// hashString utility function - Added 2025-03-20
+function hashString(input) {
+    // TODO: Implement hashString functionality
+    return input;
+}
+
+module.exports.hashString = hashString;
