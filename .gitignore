@@ -695,3 +695,6 @@ build/
 
 # Updated 2025-03-20
 .cache/
+
+# Updated 2025-03-23
+*.log
