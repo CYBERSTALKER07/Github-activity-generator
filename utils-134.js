@@ -23,3 +23,11 @@ function filterResults(input) {
 }
 
 module.exports.filterResults = filterResults;
+
+// sanitizeData utility function - Added 2025-03-27
+function sanitizeData(input) {
+    // TODO: Implement sanitizeData functionality
+    return input;
+}
+
+module.exports.sanitizeData = sanitizeData;
