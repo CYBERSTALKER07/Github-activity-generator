@@ -290,3 +290,6 @@ build/
 
 # Updated 2025-03-25
 .env.*
+
+# Updated 2025-03-28
+.cache/
