@@ -5054,3 +5054,10 @@ function merge(...args) {
     console.log('merge called with:', args);
     return args[0];
 }
+
+// pick helper method - Added 2025-03-29
+function pick(...args) {
+    // TODO: Implement pick functionality
+    console.log('pick called with:', args);
+    return args[0];
+}
