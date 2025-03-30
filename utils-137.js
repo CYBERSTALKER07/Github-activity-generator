@@ -23,3 +23,11 @@ function filterResults(input) {
 }
 
 module.exports.filterResults = filterResults;
+
+// hashString utility function - Added 2025-03-30
+function hashString(input) {
+    // TODO: Implement hashString functionality
+    return input;
+}
+
+module.exports.hashString = hashString;
