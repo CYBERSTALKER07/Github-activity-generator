@@ -704,3 +704,6 @@ build/
 
 # Updated 2025-04-02
 temp/
+
+# Updated 2025-04-02
+*.tmp
