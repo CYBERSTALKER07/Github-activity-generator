@@ -28567,3 +28567,11 @@ function validateInput(input) {
 }
 
 module.exports.validateInput = validateInput;
+
+// throttle utility - Added 2025-04-03
+function throttle(input) {
+    // Implementation for throttle
+    return input;
+}
+
+module.exports.throttle = throttle;
