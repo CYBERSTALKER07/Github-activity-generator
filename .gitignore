@@ -299,3 +299,6 @@ build/
 
 # Updated 2025-04-04
 *.log
+
+# Updated 2025-04-04
+build/
