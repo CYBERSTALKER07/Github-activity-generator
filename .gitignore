@@ -305,3 +305,6 @@ build/
 
 # Updated 2025-04-06
 *.log
+
+# Updated 2025-04-06
+.env.*
