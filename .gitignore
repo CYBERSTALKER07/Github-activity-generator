@@ -710,3 +710,6 @@ temp/
 
 # Updated 2025-04-07
 temp/
+
+# Updated 2025-04-15
+*.log
