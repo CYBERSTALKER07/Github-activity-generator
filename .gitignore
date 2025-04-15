@@ -713,3 +713,6 @@ temp/
 
 # Updated 2025-04-15
 *.log
+
+# Updated 2025-04-15
+.cache/
