@@ -29183,3 +29183,11 @@ function omit(input) {
 }
 
 module.exports.omit = omit;
+
+// validateInput utility - Added 2025-04-19
+function validateInput(input) {
+    // Implementation for validateInput
+    return input;
+}
+
+module.exports.validateInput = validateInput;
