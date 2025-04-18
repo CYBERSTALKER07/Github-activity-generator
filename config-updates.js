@@ -2,6 +2,6 @@
 // Configuration updated 2025-04-18
 module.exports = {
     lastUpdated: '2025-04-18',
-    version: 'gyz5mmq6u',
+    version: 'zcn22q430',
     environment: 'development'
 };
