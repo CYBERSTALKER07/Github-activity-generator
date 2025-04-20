@@ -728,3 +728,6 @@ temp/
 
 # Updated 2025-04-19
 .env.*
+
+# Updated 2025-04-21
+.env.*
