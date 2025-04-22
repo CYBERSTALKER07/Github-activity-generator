@@ -598,27 +598,16 @@ module.exports = {
     }
 
     createMeaningfulChange(date, index) {
+        // Limit the types of files created to essential ones only
         const changeTypes = [
             () => this.updateProgressLog(date),
-            () => this.addUtilityFunction(date, index),
             () => this.updateDocumentation(date),
-            () => this.addTestCase(date, index),
-            () => this.updateConfiguration(date),
-            () => this.addHelperMethod(date, index)
+            () => this.updateConfiguration(date)
         ];
         
-        // Randomly select 1-2 change types
-        const numChanges = Math.floor(Math.random() * 2) + 1;
-        const selectedChanges = [];
-        
-        while (selectedChanges.length < numChanges) {
-            const changeType = changeTypes[Math.floor(Math.random() * changeTypes.length)];
-            if (!selectedChanges.includes(changeType)) {
-                selectedChanges.push(changeType);
-            }
-        }
-        
-        selectedChanges.forEach(change => change());
+        // Only create one type of change to minimize file creation
+        const selectedChange = changeTypes[index % changeTypes.length];
+        selectedChange();
     }
 
     updateProgressLog(date) {
@@ -632,23 +621,13 @@ module.exports = {
     }
 
     addUtilityFunction(date, index) {
-        const utilityFunctions = [
-            'formatDate', 'validateInput', 'sanitizeData', 'parseConfig',
-            'generateId', 'hashString', 'sortArray', 'filterResults'
-        ];
+        // Create fewer utility files by grouping functions
+        const utilFile = path.join(this.projectRoot, 'src', 'utils', 'utilities.js');
+        this.ensureDirectoryExists(path.dirname(utilFile));
         
-        const funcName = utilityFunctions[index % utilityFunctions.length];
-        const utilContent = `
-// ${funcName} utility function - Added ${date.toISOString().split('T')[0]}
-function ${funcName}(input) {
-    // TODO: Implement ${funcName} functionality
-    return input;
-}
-
-module.exports.${funcName} = ${funcName};
-`;
+        const funcName = `util_${index}`;
+        const utilContent = `\n// ${funcName} - Added ${date.toISOString().split('T')[0]}\nfunction ${funcName}() { return true; }\n`;
         
-        const utilFile = path.join(this.projectRoot, `utils-${Math.floor(index / 8)}.js`);
         if (!fs.existsSync(utilFile)) {
             fs.writeFileSync(utilFile, '// Utility functions\n');
         }
@@ -676,111 +655,31 @@ module.exports.${funcName} = ${funcName};
     }
 
     addTestCase(date, index) {
-        const testContent = `
-// Test case added ${date.toISOString().split('T')[0]}
-test('should handle case ${index}', () => {
-    const result = true; // Placeholder test
-    expect(result).toBe(true);
-});
-`;
+        // Consolidate tests into fewer files
+        const testFile = path.join(this.projectRoot, 'src', 'tests', 'main.test.js');
+        this.ensureDirectoryExists(path.dirname(testFile));
         
-        const testFile = path.join(this.projectRoot, `test-suite-${Math.floor(index / 5)}.js`);
+        const testContent = `\n// Test ${index} - ${date.toISOString().split('T')[0]}\ntest('test_${index}', () => expect(true).toBe(true));\n`;
+        
         if (!fs.existsSync(testFile)) {
-            fs.writeFileSync(testFile, '// Test suite\n');
+            fs.writeFileSync(testFile, '// Main test suite\n');
         }
         
         fs.appendFileSync(testFile, testContent);
     }
 
-    updateConfiguration(date) {
-        const configTypes = [
-            { file: 'package.json', update: () => this.updatePackageJson(date) },
-            { file: 'config.js', update: () => this.updateConfigJs(date) },
-            { file: '.gitignore', update: () => this.updateGitignore(date) }
-        ];
-        
-        const selectedConfig = configTypes[Math.floor(Math.random() * configTypes.length)];
-        selectedConfig.update();
-    }
-
-    updatePackageJson(date) {
-        try {
-            const packagePath = path.join(this.projectRoot, 'package.json');
-            const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-            
-            // Add a comment field with update date
-            packageJson._lastUpdated = date.toISOString().split('T')[0];
-            
-            fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
-        } catch (error) {
-            // If package.json doesn't exist or is invalid, create a basic one
-            const basicPackage = {
-                name: "commit-booster-enhanced",
-                version: "1.0.0",
-                _lastUpdated: date.toISOString().split('T')[0]
-            };
-            fs.writeFileSync(path.join(this.projectRoot, 'package.json'), JSON.stringify(basicPackage, null, 2));
-        }
-    }
-
-    updateConfigJs(date) {
-        const configContent = `
-// Configuration updated ${date.toISOString().split('T')[0]}
-module.exports = {
-    lastUpdated: '${date.toISOString().split('T')[0]}',
-    version: '${Math.random().toString(36).substr(2, 9)}',
-    environment: 'development'
-};
-`;
-        fs.writeFileSync(path.join(this.projectRoot, 'config-updates.js'), configContent);
-    }
-
-    updateGitignore(date) {
-        const ignoreEntries = [
-            '*.log', '*.tmp', '.env.*', 'temp/', '.cache/', 'build/'
-        ];
-        
-        const gitignorePath = path.join(this.projectRoot, '.gitignore');
-        const entry = `\n# Updated ${date.toISOString().split('T')[0]}\n${ignoreEntries[Math.floor(Math.random() * ignoreEntries.length)]}\n`;
-        
-        if (!fs.existsSync(gitignorePath)) {
-            fs.writeFileSync(gitignorePath, '# Gitignore\n');
-        }
-        
-        fs.appendFileSync(gitignorePath, entry);
-    }
-
-    addHelperMethod(date, index) {
-        const helperMethods = [
-            'debounce', 'throttle', 'deepClone', 'merge', 'pick', 'omit'
-        ];
-        
-        const methodName = helperMethods[index % helperMethods.length];
-        const helperContent = `
-// ${methodName} helper method - Added ${date.toISOString().split('T')[0]}
-function ${methodName}(...args) {
-    // TODO: Implement ${methodName} functionality
-    console.log('${methodName} called with:', args);
-    return args[0];
-}
-`;
-        
-        const helperFile = path.join(this.projectRoot, 'src', 'utils', 'helpers.js');
-        this.ensureDirectoryExists(path.dirname(helperFile));
-        
-        if (!fs.existsSync(helperFile)) {
-            fs.writeFileSync(helperFile, '// Helper methods\n');
-        }
-        
-        fs.appendFileSync(helperFile, helperContent);
-    }
-
-    // Enhanced batch generation command
+    // Enhanced batch generation command with file limit protection
     async generateBatchActivity(options = {}) {
         console.log('🎯 Starting Enhanced Batch Activity Generation');
         console.log('===============================================');
         
         try {
+            const {
+                daysBack = 365,
+                maxFiles = 50, // Limit files created to prevent directory bloat
+                dryRun = false
+            } = options;
+            
             // Generate activity pattern
             const commits = this.generateActivityPattern(options);
             
@@ -789,10 +688,20 @@ function ${methodName}(...args) {
                 return;
             }
             
-            console.log(`📊 Generated ${commits.length} commits over ${options.daysBack || 365} days`);
+            console.log(`📊 Generated ${commits.length} commits over ${daysBack} days`);
             
-            // Create batch commits
-            await this.createBatchCommits(commits);
+            if (commits.length > maxFiles) {
+                console.log(`⚠️  Limiting to ${maxFiles} files to prevent directory bloat`);
+            }
+            
+            if (dryRun) {
+                console.log('🔍 Dry run - showing what would be created:');
+                this.showBatchStats(commits);
+                return;
+            }
+            
+            // Create batch commits with file limit
+            await this.createBatchCommits(commits.slice(0, maxFiles));
             
             // Show statistics
             this.showBatchStats(commits);
@@ -803,32 +712,6 @@ function ${methodName}(...args) {
         } catch (error) {
             console.error('❌ Error in batch generation:', error.message);
         }
-    }
-
-    showBatchStats(commits) {
-        const stats = {
-            total: commits.length,
-            byMonth: {},
-            byDay: {},
-            avgPerDay: 0
-        };
-        
-        commits.forEach(commit => {
-            const month = commit.date.toISOString().substr(0, 7);
-            const day = commit.date.toLocaleDateString('en-US', { weekday: 'long' });
-            
-            stats.byMonth[month] = (stats.byMonth[month] || 0) + 1;
-            stats.byDay[day] = (stats.byDay[day] || 0) + 1;
-        });
-        
-        const uniqueDays = new Set(commits.map(c => c.date.toISOString().split('T')[0])).size;
-        stats.avgPerDay = (stats.total / uniqueDays).toFixed(1);
-        
-        console.log('\n📊 Batch Generation Statistics:');
-        console.log(`   Total commits: ${stats.total}`);
-        console.log(`   Active days: ${uniqueDays}`);
-        console.log(`   Average per day: ${stats.avgPerDay}`);
-        console.log(`   Most active month: ${Object.keys(stats.byMonth).reduce((a, b) => stats.byMonth[a] > stats.byMonth[b] ? a : b)}`);
     }
 
     // CONTENT GENERATORS
