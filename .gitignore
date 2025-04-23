@@ -323,3 +323,6 @@ build/
 
 # Updated 2025-04-22
 *.log
+
+# Updated 2025-04-23
+.cache/
