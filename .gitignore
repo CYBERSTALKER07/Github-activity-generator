@@ -734,3 +734,6 @@ temp/
 
 # Updated 2025-04-22
 build/
+
+# Updated 2025-04-27
+*.tmp
