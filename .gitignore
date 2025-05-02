@@ -344,3 +344,6 @@ build/
 
 # Updated 2025-05-02
 *.tmp
+
+# Updated 2025-05-02
+temp/
