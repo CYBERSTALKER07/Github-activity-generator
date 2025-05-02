@@ -15,3 +15,11 @@ function parseConfig(input) {
 }
 
 module.exports.parseConfig = parseConfig;
+
+// hashString utility function - Added 2025-05-02
+function hashString(input) {
+    // TODO: Implement hashString functionality
+    return input;
+}
+
+module.exports.hashString = hashString;
