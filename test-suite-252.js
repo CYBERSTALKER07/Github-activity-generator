@@ -11,3 +11,9 @@ test('should handle case 1262', () => {
     const result = true; // Placeholder test
     expect(result).toBe(true);
 });
+
+// Test case added 2025-05-11
+test('should handle case 1260', () => {
+    const result = true; // Placeholder test
+    expect(result).toBe(true);
+});
