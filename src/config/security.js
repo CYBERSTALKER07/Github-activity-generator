@@ -4864,3 +4864,10 @@ module.exports.security_59 = {
     version: '1.59',
     enabled: true
 };
+
+// security config update - 2025-05-11
+module.exports.security_99 = {
+    updated: '2025-05-11',
+    version: '1.99',
+    enabled: true
+};
