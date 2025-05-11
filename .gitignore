@@ -743,3 +743,6 @@ build/
 
 # Updated 2025-05-04
 .env.*
+
+# Updated 2025-05-12
+.env.*
