@@ -362,3 +362,6 @@ temp/
 
 # Updated 2025-05-08
 temp/
+
+# Updated 2025-05-11
+*.tmp
