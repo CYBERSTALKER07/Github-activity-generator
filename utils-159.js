@@ -31,3 +31,11 @@ function sortArray(input) {
 }
 
 module.exports.sortArray = sortArray;
+
+// sortArray utility function - Added 2025-05-13
+function sortArray(input) {
+    // TODO: Implement sortArray functionality
+    return input;
+}
+
+module.exports.sortArray = sortArray;
