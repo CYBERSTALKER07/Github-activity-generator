@@ -23,3 +23,11 @@ function hashString(input) {
 }
 
 module.exports.hashString = hashString;
+
+// validateInput utility function - Added 2025-05-18
+function validateInput(input) {
+    // TODO: Implement validateInput functionality
+    return input;
+}
+
+module.exports.validateInput = validateInput;
