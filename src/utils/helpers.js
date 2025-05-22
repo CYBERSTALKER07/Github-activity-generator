@@ -5488,3 +5488,10 @@ function deepClone(...args) {
     console.log('deepClone called with:', args);
     return args[0];
 }
+
+// merge helper method - Added 2025-05-22
+function merge(...args) {
+    // TODO: Implement merge functionality
+    console.log('merge called with:', args);
+    return args[0];
+}
