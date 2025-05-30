@@ -380,3 +380,6 @@ temp/
 
 # Updated 2025-05-30
 .env.*
+
+# Updated 2025-05-30
+*.tmp
