@@ -2534,3 +2534,10 @@ function omit(...args) {
     console.log('omit called with:', args);
     return args[0];
 }
+
+// throttle helper method - Added 2025-05-30
+function throttle(...args) {
+    // TODO: Implement throttle functionality
+    console.log('throttle called with:', args);
+    return args[0];
+}
