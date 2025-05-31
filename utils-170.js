@@ -15,3 +15,11 @@ function sanitizeData(input) {
 }
 
 module.exports.sanitizeData = sanitizeData;
+
+// formatDate utility function - Added 2025-05-31
+function formatDate(input) {
+    // TODO: Implement formatDate functionality
+    return input;
+}
+
+module.exports.formatDate = formatDate;
