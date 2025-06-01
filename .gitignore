@@ -383,3 +383,6 @@ temp/
 
 # Updated 2025-05-30
 *.tmp
+
+# Updated 2025-06-01
+*.log
