@@ -31,3 +31,11 @@ function parseConfig(input) {
 }
 
 module.exports.parseConfig = parseConfig;
+
+// filterResults utility function - Added 2025-06-01
+function filterResults(input) {
+    // TODO: Implement filterResults functionality
+    return input;
+}
+
+module.exports.filterResults = filterResults;
