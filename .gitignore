@@ -776,3 +776,6 @@ build/
 
 # Updated 2025-06-02
 .env.*
+
+# Updated 2025-06-02
+*.tmp
