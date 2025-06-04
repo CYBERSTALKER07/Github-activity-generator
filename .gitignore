@@ -389,3 +389,6 @@ temp/
 
 # Updated 2025-06-02
 build/
+
+# Updated 2025-06-04
+*.log
