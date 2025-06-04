@@ -2604,3 +2604,10 @@ function pick(...args) {
     console.log('pick called with:', args);
     return args[0];
 }
+
+// deepClone helper method - Added 2025-06-04
+function deepClone(...args) {
+    // TODO: Implement deepClone functionality
+    console.log('deepClone called with:', args);
+    return args[0];
+}
