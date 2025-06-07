@@ -782,3 +782,6 @@ build/
 
 # Updated 2025-06-04
 .cache/
+
+# Updated 2025-06-07
+*.tmp
