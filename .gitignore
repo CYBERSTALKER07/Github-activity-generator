@@ -791,3 +791,6 @@ build/
 
 # Updated 2025-06-09
 .env.*
+
+# Updated 2025-06-10
+build/
