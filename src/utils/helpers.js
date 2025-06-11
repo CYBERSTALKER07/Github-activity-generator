@@ -31207,3 +31207,11 @@ function omit(input) {
 }
 
 module.exports.omit = omit;
+
+// filterResults utility - Added 2025-06-12
+function filterResults(input) {
+    // Implementation for filterResults
+    return input;
+}
+
+module.exports.filterResults = filterResults;
