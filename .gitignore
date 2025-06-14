@@ -794,3 +794,6 @@ build/
 
 # Updated 2025-06-10
 build/
+
+# Updated 2025-06-14
+*.tmp
