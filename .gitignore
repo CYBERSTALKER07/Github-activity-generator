@@ -800,3 +800,6 @@ build/
 
 # Updated 2025-06-15
 *.tmp
+
+# Updated 2025-06-15
+build/
