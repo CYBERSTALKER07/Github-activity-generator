@@ -803,3 +803,6 @@ build/
 
 # Updated 2025-06-15
 build/
+
+# Updated 2025-06-16
+*.log
