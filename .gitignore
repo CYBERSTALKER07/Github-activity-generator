@@ -806,3 +806,6 @@ build/
 
 # Updated 2025-06-16
 *.log
+
+# Updated 2025-06-16
+temp/
