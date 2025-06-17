@@ -1,7 +1,7 @@
 
-// Configuration updated 2025-06-16
+// Configuration updated 2025-06-17
 module.exports = {
-    lastUpdated: '2025-06-16',
-    version: '6p0fyzqd2',
+    lastUpdated: '2025-06-17',
+    version: 'bdgku0f6r',
     environment: 'development'
 };
