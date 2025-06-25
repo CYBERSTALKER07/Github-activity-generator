@@ -23,3 +23,11 @@ function hashString(input) {
 }
 
 module.exports.hashString = hashString;
+
+// formatDate utility function - Added 2025-06-25
+function formatDate(input) {
+    // TODO: Implement formatDate functionality
+    return input;
+}
+
+module.exports.formatDate = formatDate;
