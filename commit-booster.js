@@ -570,6 +570,9 @@ module.exports = {
     async createBatchCommits(commits) {
         console.log(`🚀 Creating ${commits.length} commits...`);
         
+        let successfulCommits = 0;
+        let skippedCommits = 0;
+        
         for (let i = 0; i < commits.length; i++) {
             const commit = commits[i];
             const progress = Math.floor((i / commits.length) * 100);
@@ -578,94 +581,186 @@ module.exports = {
                 // Create meaningful file changes
                 this.createMeaningfulChange(commit.date, i);
                 
-                // Stage changes
-                execSync('git add .', { stdio: 'pipe' });
+                // Check if there are actually changes to commit
+                try {
+                    execSync('git diff --cached --quiet', { stdio: 'pipe' });
+                    // If no error, there are no staged changes - stage everything
+                    execSync('git add .', { stdio: 'pipe' });
+                } catch (diffError) {
+                    // Error means there are staged changes, which is good
+                }
                 
-                // Commit with custom date
+                // Double-check that we have something to commit
+                try {
+                    const statusOutput = execSync('git status --porcelain', { encoding: 'utf8', stdio: 'pipe' });
+                    if (!statusOutput.trim()) {
+                        console.log(`⏭️  Skipping commit ${i + 1}: No changes to commit`);
+                        skippedCommits++;
+                        continue;
+                    }
+                } catch (statusError) {
+                    console.log(`⚠️  Warning: Could not check git status for commit ${i + 1}`);
+                }
+                
+                // Commit with custom date and proper error handling
                 const commitDate = commit.date.toISOString().replace('T', ' ').slice(0, 19);
-                execSync(`git commit -m "${commit.message}" --date "${commitDate}"`, { stdio: 'pipe' });
+                const commitMessage = this.sanitizeCommitMessage(commit.message);
                 
-                if (i % 10 === 0 || i === commits.length - 1) {
-                    console.log(`📝 Progress: ${progress}% (${i + 1}/${commits.length})`);
+                try {
+                    execSync(`git commit -m "${commitMessage}" --date "${commitDate}"`, { 
+                        stdio: 'pipe',
+                        timeout: 10000 // 10 second timeout
+                    });
+                    successfulCommits++;
+                } catch (commitError) {
+                    // Try alternative commit approach
+                    if (commitError.message.includes('nothing to commit')) {
+                        console.log(`⏭️  Skipping commit ${i + 1}: Nothing to commit`);
+                        skippedCommits++;
+                        continue;
+                    } else if (commitError.message.includes('please tell me who you are')) {
+                        this.configureGitUser();
+                        // Retry the commit
+                        execSync(`git commit -m "${commitMessage}" --date "${commitDate}"`, { stdio: 'pipe' });
+                        successfulCommits++;
+                    } else {
+                        throw commitError;
+                    }
+                }
+                
+                if (i % 25 === 0 || i === commits.length - 1) {
+                    console.log(`📝 Progress: ${progress}% (${successfulCommits} created, ${skippedCommits} skipped)`);
                 }
                 
             } catch (error) {
-                console.error(`❌ Error creating commit ${i + 1}:`, error.message);
+                console.error(`❌ Error creating commit ${i + 1}:`, this.getReadableError(error));
+                
+                // Don't fail the entire batch for one commit error
+                if (error.message.includes('fatal:') || error.message.includes('timeout')) {
+                    console.log(`⚠️  Continuing with next commit...`);
+                    skippedCommits++;
+                    continue;
+                }
             }
         }
         
-        console.log('✅ Batch commits created successfully!');
+        console.log(`✅ Batch commits completed!`);
+        console.log(`   Successful: ${successfulCommits}`);
+        console.log(`   Skipped: ${skippedCommits}`);
+        console.log(`   Total processed: ${successfulCommits + skippedCommits}/${commits.length}`);
+    }
+
+    // Sanitize commit messages to prevent shell injection
+    sanitizeCommitMessage(message) {
+        return message
+            .replace(/"/g, '\\"')  // Escape double quotes
+            .replace(/'/g, "\\'")  // Escape single quotes
+            .replace(/`/g, '\\`')  // Escape backticks
+            .replace(/\$/g, '\\$') // Escape dollar signs
+            .trim();
+    }
+
+    // Configure git user if not set
+    configureGitUser() {
+        try {
+            console.log('⚙️  Configuring git user...');
+            
+            // Check if user.name is set
+            try {
+                execSync('git config user.name', { stdio: 'pipe' });
+            } catch (error) {
+                execSync('git config user.name "GitHub Contributor"', { stdio: 'pipe' });
+                console.log('✅ Set git user.name to "GitHub Contributor"');
+            }
+            
+            // Check if user.email is set
+            try {
+                execSync('git config user.email', { stdio: 'pipe' });
+            } catch (error) {
+                execSync('git config user.email "contributor@example.com"', { stdio: 'pipe' });
+                console.log('✅ Set git user.email to "contributor@example.com"');
+                console.log('💡 You can change this later with: git config user.email "your-email@example.com"');
+            }
+        } catch (configError) {
+            console.error('❌ Failed to configure git user:', configError.message);
+            throw new Error('Git user configuration required. Please set git config user.name and user.email');
+        }
+    }
+
+    // Get human-readable error messages
+    getReadableError(error) {
+        if (error.message.includes('nothing to commit')) {
+            return 'No changes to commit (this is normal)';
+        } else if (error.message.includes('please tell me who you are')) {
+            return 'Git user not configured - attempting auto-configuration';
+        } else if (error.message.includes('timeout')) {
+            return 'Git operation timed out';
+        } else if (error.message.includes('fatal:')) {
+            return 'Git fatal error - ' + error.message.split('fatal:')[1]?.trim();
+        } else {
+            return error.message.substring(0, 100) + '...';
+        }
     }
 
     createMeaningfulChange(date, index) {
-        // Limit the types of files created to essential ones only
-        const changeTypes = [
-            () => this.updateProgressLog(date),
-            () => this.updateDocumentation(date),
-            () => this.updateConfiguration(date)
-        ];
-        
-        // Only create one type of change to minimize file creation
-        const selectedChange = changeTypes[index % changeTypes.length];
-        selectedChange();
+        try {
+            // Create more varied and meaningful changes
+            const changeTypes = [
+                () => this.updateProgressLog(date, index),
+                () => this.updateDocumentation(date, index),
+                () => this.updateConfiguration(date, index),
+                () => this.createUtilityUpdate(date, index),
+                () => this.createFeatureNote(date, index)
+            ];
+            
+            // Select 1-2 change types to ensure we have enough variety
+            const numChanges = Math.min(2, Math.floor(Math.random() * 2) + 1);
+            const selectedTypes = [];
+            
+            while (selectedTypes.length < numChanges) {
+                const typeIndex = Math.floor(Math.random() * changeTypes.length);
+                if (!selectedTypes.includes(typeIndex)) {
+                    selectedTypes.push(typeIndex);
+                    changeTypes[typeIndex]();
+                }
+            }
+            
+        } catch (error) {
+            console.error(`Warning: Could not create change for commit ${index}:`, error.message);
+            // Fallback: create a simple log entry
+            this.createFallbackChange(date, index);
+        }
     }
 
-    updateProgressLog(date) {
-        const logEntry = `\n## ${date.toISOString().split('T')[0]}\n- Enhanced project functionality\n- Improved code quality\n- Added meaningful contributions\n`;
+    updateProgressLog(date, index) {
+        const dateStr = date.toISOString().split('T')[0];
+        const logEntry = `\n## ${dateStr}\n- Commit #${index + 1}: Enhanced project functionality\n- Improved code structure and maintainability\n- Updated documentation and comments\n`;
         
         if (!fs.existsSync(this.logFile)) {
-            fs.writeFileSync(this.logFile, '# Project Progress Log\n');
+            fs.writeFileSync(this.logFile, '# Project Progress Log\n\nThis log tracks daily improvements and changes.\n');
         }
         
         fs.appendFileSync(this.logFile, logEntry);
     }
 
-    addUtilityFunction(date, index) {
-        // Create fewer utility files by grouping functions
-        const utilFile = path.join(this.projectRoot, 'src', 'utils', 'utilities.js');
-        this.ensureDirectoryExists(path.dirname(utilFile));
+    updateDocumentation(date, index) {
+        const dateStr = date.toISOString().split('T')[0];
+        const docTypes = ['API.md', 'CONTRIBUTING.md', 'CHANGELOG.md', 'README.md'];
+        const selectedDoc = docTypes[index % docTypes.length];
         
-        const funcName = `util_${index}`;
-        const utilContent = `\n// ${funcName} - Added ${date.toISOString().split('T')[0]}\nfunction ${funcName}() { return true; }\n`;
+        const updateContent = `\n### Update ${dateStr} - Entry ${index}\n- Improved documentation clarity\n- Added examples and usage notes\n- Enhanced readability\n`;
         
-        if (!fs.existsSync(utilFile)) {
-            fs.writeFileSync(utilFile, '// Utility functions\n');
-        }
-        
-        fs.appendFileSync(utilFile, utilContent);
-    }
-
-    updateDocumentation(date) {
-        const docTypes = ['API.md', 'CONTRIBUTING.md', 'CHANGELOG.md'];
-        const selectedDoc = docTypes[Math.floor(Math.random() * docTypes.length)];
-        const docPath = path.join(this.projectRoot, selectedDoc);
-        
-        const updateContent = `\n### Update ${date.toISOString().split('T')[0]}\n- Improved documentation clarity\n- Added examples and usage notes\n`;
-        
-        if (!fs.existsSync(docPath)) {
+        if (!fs.existsSync(selectedDoc)) {
             const headers = {
                 'API.md': '# API Documentation\n',
                 'CONTRIBUTING.md': '# Contributing Guidelines\n',
-                'CHANGELOG.md': '# Changelog\n'
+                'CHANGELOG.md': '# Changelog\n',
+                'README.md': '# Project README\n'
             };
-            fs.writeFileSync(docPath, headers[selectedDoc]);
+            fs.writeFileSync(selectedDoc, headers[selectedDoc] || '# Documentation\n');
         }
         
-        fs.appendFileSync(docPath, updateContent);
-    }
-
-    addTestCase(date, index) {
-        // Consolidate tests into fewer files
-        const testFile = path.join(this.projectRoot, 'src', 'tests', 'main.test.js');
-        this.ensureDirectoryExists(path.dirname(testFile));
-        
-        const testContent = `\n// Test ${index} - ${date.toISOString().split('T')[0]}\ntest('test_${index}', () => expect(true).toBe(true));\n`;
-        
-        if (!fs.existsSync(testFile)) {
-            fs.writeFileSync(testFile, '// Main test suite\n');
-        }
-        
-        fs.appendFileSync(testFile, testContent);
+        fs.appendFileSync(selectedDoc, updateContent);
     }
 
     // Enhanced batch generation command with file limit protection
@@ -714,419 +809,418 @@ module.exports = {
         }
     }
 
-    // CONTENT GENERATORS
+    showBatchStats(commits) {
+        const stats = {
+            total: commits.length,
+            byMonth: {},
+            byDay: {},
+            avgPerDay: 0
+        };
+        
+        commits.forEach(commit => {
+            const month = commit.date.toISOString().substr(0, 7);
+            const day = commit.date.toLocaleDateString('en-US', { weekday: 'long' });
+            
+            stats.byMonth[month] = (stats.byMonth[month] || 0) + 1;
+            stats.byDay[day] = (stats.byDay[day] || 0) + 1;
+        });
+        
+        const uniqueDays = new Set(commits.map(c => c.date.toISOString().split('T')[0])).size;
+        stats.avgPerDay = (stats.total / uniqueDays).toFixed(1);
+        
+        console.log('\n📊 Batch Generation Statistics:');
+        console.log(`   Total commits: ${stats.total}`);
+        console.log(`   Active days: ${uniqueDays}`);
+        console.log(`   Average per day: ${stats.avgPerDay}`);
+        
+        if (Object.keys(stats.byMonth).length > 0) {
+            const mostActiveMonth = Object.keys(stats.byMonth).reduce((a, b) => 
+                stats.byMonth[a] > stats.byMonth[b] ? a : b
+            );
+            console.log(`   Most active month: ${mostActiveMonth} (${stats.byMonth[mostActiveMonth]} commits)`);
+        }
+        
+        if (Object.keys(stats.byDay).length > 0) {
+            const mostActiveDay = Object.keys(stats.byDay).reduce((a, b) => 
+                stats.byDay[a] > stats.byDay[b] ? a : b
+            );
+            console.log(`   Most active weekday: ${mostActiveDay} (${stats.byDay[mostActiveDay]} commits)`);
+        }
+    }
 
+    // Helper method to ensure directory exists
+    ensureDirectoryExists(dirPath) {
+        try {
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath, { recursive: true });
+            }
+        } catch (error) {
+            console.error(`Warning: Could not create directory ${dirPath}:`, error.message);
+        }
+    }
+
+    // Enhanced file generators
     generateApiDoc() {
+        const timestamp = new Date().toISOString().split('T')[0];
         return `# API Documentation
 
-## CommitBooster API
+Updated: ${timestamp}
 
-### Methods
+## Overview
+This API provides methods for automated commit generation.
 
-#### \`generateDailyCommit()\`
-Creates daily progress entries and meaningful commits.
+## Methods
 
-#### \`createMicroCommits()\`
-Generates multiple small commits for development workflow.
+### generateDailyCommit()
+Creates meaningful daily commits with project updates.
 
-#### \`createFeatureCommits(featureName)\`
-Creates commits for a new feature development cycle.
+### createMicroCommits()
+Generates multiple small commits for incremental changes.
 
-Generated: ${new Date().toISOString()}
+### pushToRemote()
+Pushes commits to the configured remote repository.
+
+## Usage Examples
+\`\`\`javascript
+const booster = new CommitBooster();
+await booster.generateDailyCommit();
+\`\`\`
 `;
     }
 
     generateContributingDoc() {
+        const timestamp = new Date().toISOString().split('T')[0];
         return `# Contributing Guidelines
 
-## How to Contribute
+Updated: ${timestamp}
 
+## Getting Started
 1. Fork the repository
 2. Create a feature branch
-3. Make meaningful commits
+3. Make your changes
 4. Submit a pull request
 
-## Commit Message Format
+## Code Style
+- Use ES6+ features
+- Follow Node.js best practices  
+- Add proper error handling
+- Write descriptive commit messages
 
-- \`feat:\` New features
-- \`fix:\` Bug fixes  
-- \`docs:\` Documentation updates
-- \`refactor:\` Code refactoring
-- \`test:\` Adding tests
-
-Generated: ${new Date().toISOString()}
+## Testing
+Run tests before submitting changes:
+\`\`\`bash
+npm test
+\`\`\`
 `;
     }
 
     updateChangelog() {
-        const version = `v1.0.${Date.now() % 1000}`;
-        const date = new Date().toISOString().split('T')[0];
+        const timestamp = new Date().toISOString().split('T')[0];
+        const version = `1.0.${Math.floor(Math.random() * 100)}`;
         
         return `# Changelog
 
-## [${version}] - ${date}
+## [${version}] - ${timestamp}
 
 ### Added
-- New commit automation methods
-- Enhanced documentation generation
+- Enhanced batch commit generation
 - Improved error handling
+- Better progress reporting
 
 ### Changed
-- Optimized commit frequency algorithms
-- Updated project structure
+- Optimized file creation process
+- Updated documentation
 
-### Fixed
-- Minor bug fixes and improvements
-
-Generated: ${new Date().toISOString()}
+### Fixed  
+- Resolved commit message sanitization
+- Fixed git user configuration issues
 `;
     }
 
     generateSetupDoc() {
-        return `# Setup Guide
+        const timestamp = new Date().toISOString().split('T')[0];
+        return `# Setup Documentation
 
-## Installation
+Updated: ${timestamp}
 
-\`\`\`bash
-npm install
-npm run init
-\`\`\`
+## Quick Setup
+
+1. **Initialize the project:**
+   \`\`\`bash
+   npm run init
+   \`\`\`
+
+2. **Configure remote repository:**
+   \`\`\`bash
+   node commit-booster.js setup-remote https://github.com/username/repo.git
+   \`\`\`
+
+3. **Start daily automation:**
+   \`\`\`bash
+   npm run auto
+   \`\`\`
 
 ## Configuration
+- Set up git credentials
+- Configure automation schedule
+- Customize commit types
 
-Set your git credentials:
-\`\`\`bash
-git config user.email "your-email@example.com"
-git config user.name "Your Name"
-\`\`\`
-
-## Usage
-
-- \`npm run daily\` - Daily commits
-- \`npm run micro\` - Micro commits
-- \`npm run docs\` - Documentation commits
-
-Generated: ${new Date().toISOString()}
+## Troubleshooting
+- Check git configuration
+- Verify remote repository access
+- Review automation logs
 `;
     }
 
     generateTestFile() {
-        return `// Unit Tests
-// Generated: ${new Date().toISOString()}
+        const timestamp = new Date().toISOString().split('T')[0];
+        return `// Test Suite - Updated ${timestamp}
 
-const assert = require('assert');
-const CommitBooster = require('./commit-booster.js');
+const CommitBooster = require('./commit-booster');
 
 describe('CommitBooster', () => {
     let booster;
-
+    
     beforeEach(() => {
         booster = new CommitBooster();
     });
-
-    it('should initialize correctly', () => {
-        assert.ok(booster);
-        assert.ok(booster.projectRoot);
+    
+    test('should initialize correctly', () => {
+        expect(booster).toBeDefined();
+        expect(typeof booster.generateDailyCommit).toBe('function');
     });
-
-    it('should generate daily commits', async () => {
-        // Test implementation
-        assert.ok(true);
+    
+    test('should create meaningful commits', async () => {
+        const result = await booster.generateDailyCommit();
+        expect(result).toBeTruthy();
     });
-
-    it('should create micro commits', () => {
-        // Test implementation
-        assert.ok(true);
+    
+    test('should handle git operations', () => {
+        expect(() => booster.initGit()).not.toThrow();
     });
 });
 `;
     }
 
     generateEslintConfig() {
-        return `{
-    "env": {
-        "node": true,
-        "es2021": true
-    },
-    "extends": "eslint:recommended",
-    "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module"
-    },
-    "rules": {
-        "indent": ["error", 4],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"]
-    }
-}`;
+        return JSON.stringify({
+            "env": {
+                "node": true,
+                "es2021": true
+            },
+            "extends": ["eslint:recommended"],
+            "parserOptions": {
+                "ecmaVersion": 12,
+                "sourceType": "module"
+            },
+            "rules": {
+                "indent": ["error", 4],
+                "quotes": ["error", "single"],
+                "semi": ["error", "always"]
+            }
+        }, null, 2);
     }
 
     generateGitignore() {
-        return `# Dependencies
+        const timestamp = new Date().toISOString().split('T')[0];
+        return `# Git Ignore - Updated ${timestamp}
+
+# Dependencies
 node_modules/
+npm-debug.log*
+
+# Environment
+.env
+.env.local
 
 # Logs
 *.log
 logs/
 
-# Runtime data
-pids/
-*.pid
+# Temporary files
+*.tmp
+*.temp
 
-# Coverage directory used by tools like istanbul
-coverage/
-
-# Environment variables
-.env
-.env.local
-
-# IDE files
+# IDE
 .vscode/
 .idea/
 
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
+
+# Project specific
+test-suite-*.js
+config-updates.js
+utilities.js
 `;
     }
 
-    generateFeatureCode(featureName) {
-        return `// ${featureName} Feature Implementation
-// Created: ${new Date().toISOString()}
-
-class ${this.toPascalCase(featureName)} {
-    constructor(options = {}) {
-        this.options = options;
-        this.initialized = false;
-    }
-
-    async initialize() {
-        this.initialized = true;
-        console.log('${featureName} initialized successfully');
-    }
-
-    execute() {
-        if (!this.initialized) {
-            throw new Error('${featureName} not initialized');
-        }
-        
-        // TODO: Implement ${featureName} logic
-        return { success: true, feature: '${featureName}' };
-    }
-}
-
-module.exports = ${this.toPascalCase(featureName)};
-`;
-    }
-
-    generateFeatureTest(featureName) {
-        const className = this.toPascalCase(featureName);
-        return `// Tests for ${featureName} feature
-const assert = require('assert');
-const ${className} = require('./${featureName}.js');
-
-describe('${className}', () => {
-    let feature;
-
-    beforeEach(() => {
-        feature = new ${className}();
-    });
-
-    it('should initialize correctly', async () => {
-        await feature.initialize();
-        assert.ok(feature.initialized);
-    });
-
-    it('should execute successfully', async () => {
-        await feature.initialize();
-        const result = feature.execute();
-        assert.equal(result.success, true);
-        assert.equal(result.feature, '${featureName}');
-    });
-});
-`;
-    }
-
-    generateFeatureDoc(featureName) {
-        return `# ${this.toPascalCase(featureName)} Feature
-
-## Overview
-
-The ${featureName} feature provides enhanced functionality for the commit booster system.
-
-## Usage
-
-\`\`\`javascript
-const ${this.toPascalCase(featureName)} = require('./${featureName}');
-
-const feature = new ${this.toPascalCase(featureName)}();
-await feature.initialize();
-const result = feature.execute();
-\`\`\`
-
-## Methods
-
-### \`initialize()\`
-Initializes the ${featureName} feature.
-
-### \`execute()\`
-Executes the main ${featureName} functionality.
-
-Generated: ${new Date().toISOString()}
-`;
-    }
-
-    generateBugFixDoc(fix) {
-        return `# Bug Fix: ${fix}
-
-## Issue Description
-${fix}
-
-## Solution
-Applied appropriate fix to resolve the issue.
-
-## Testing
-- Manual testing completed
-- Automated tests pass
-- No regression detected
-
-Fixed: ${new Date().toISOString()}
-`;
-    }
-
-    updateDependencies() {
-        const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-        packageJson.version = this.incrementVersion(packageJson.version);
-        fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
-        this.commitFile('package.json', 'Update package version and dependencies');
-    }
-
-    cleanupTempFiles() {
-        const cleanupLog = `# Cleanup Log - ${new Date().toISOString()}
-
-## Files Cleaned
-- Temporary cache files
-- Old log entries
-- Unused dependencies
-
-## Space Freed
-Approximately 15MB of temporary files cleaned up.
-`;
-        this.createDocFile('cleanup.log', cleanupLog);
-        this.commitFile('cleanup.log', 'Clean up temporary files and optimize storage');
-    }
-
-    updateReadme() {
-        // Read existing README and add timestamp
-        const readmePath = path.join(this.projectRoot, 'README.md');
-        if (fs.existsSync(readmePath)) {
-            let content = fs.readFileSync(readmePath, 'utf8');
-            content += `\n\n---\n*Last updated: ${new Date().toLocaleDateString()}*\n`;
-            fs.writeFileSync(readmePath, content);
-            this.commitFile('README.md', 'Update documentation with latest information');
-        }
-    }
-
-    archiveOldLogs() {
-        const archiveContent = `# Archived Logs - ${new Date().toISOString()}
-
-## Log Rotation
-Previous logs have been archived to maintain performance.
-
-## Archive Location
-/logs/archive/${new Date().getFullYear()}/${new Date().getMonth() + 1}/
-`;
-        this.ensureDirectoryExists('logs');
-        this.createDocFile('logs/archive.md', archiveContent);
-        this.commitFile('logs/archive.md', 'Archive old logs and rotate log files');
-    }
-
-    generateWeeklyReport(date) {
-        const reportContent = `# Weekly Report - ${date}
-
-## Summary
-Weekly maintenance and improvements completed successfully.
-
-## Activities Completed
-- Code quality improvements
-- Documentation updates
-- Dependency updates
-- Performance optimizations
-- Bug fixes and patches
-
-## Metrics
-- Commits this week: ${Math.floor(Math.random() * 20) + 10}
-- Files updated: ${Math.floor(Math.random() * 15) + 5}
-- Issues resolved: ${Math.floor(Math.random() * 5) + 1}
-
-Generated: ${new Date().toISOString()}
-`;
-        this.ensureDirectoryExists('reports');
-        this.createDocFile(`reports/weekly-${date}.md`, reportContent);
-        this.commitFile(`reports/weekly-${date}.md`, `Generate weekly report for ${date}`);
-    }
-
-    // UTILITY METHODS
-
-    ensureDirectoryExists(dirPath) {
-        const fullPath = path.join(this.projectRoot, dirPath);
-        if (!fs.existsSync(fullPath)) {
-            fs.mkdirSync(fullPath, { recursive: true });
-        }
-    }
-
+    // Additional helper methods
     createDocFile(filename, content) {
-        const filePath = path.join(this.projectRoot, filename);
-        fs.writeFileSync(filePath, content);
+        try {
+            fs.writeFileSync(filename, content);
+        } catch (error) {
+            console.error(`Warning: Could not create file ${filename}:`, error.message);
+        }
     }
 
-    createRefactorFile(filename, purpose) {
-        const timestamp = new Date().toISOString();
-        const content = `// ${purpose}
-// Refactored: ${timestamp}
+    createRefactorFile(filename, task) {
+        const timestamp = new Date().toISOString().split('T')[0];
+        const content = `// ${task} - ${timestamp}
 
-class ${this.toPascalCase(path.basename(filename, '.js'))} {
-    constructor() {
-        this.initialized = true;
-        this.timestamp = '${timestamp}';
-    }
-
-    // TODO: Implement ${purpose.toLowerCase()}
-    execute() {
-        throw new Error('Method not implemented');
-    }
-}
-
-module.exports = ${this.toPascalCase(path.basename(filename, '.js'))};
+module.exports = {
+    // TODO: Implement ${task.toLowerCase()}
+    created: '${timestamp}',
+    purpose: '${task}'
+};
 `;
         this.createDocFile(filename, content);
     }
 
-    // HELPER METHODS
+    generateBugFixDoc(fix) {
+        const timestamp = new Date().toISOString().split('T')[0];
+        return `# Bug Fix Report
 
-    toPascalCase(str) {
-        return str.replace(/(?:^|[-_])(\w)/g, (_, char) => char.toUpperCase());
+**Date:** ${timestamp}
+**Issue:** ${fix}
+
+## Problem Description
+${fix} was causing issues in the application.
+
+## Solution
+Implemented proper error handling and validation.
+
+## Testing
+- Manual testing completed
+- Edge cases verified
+- No regressions found
+
+## Status
+✅ Fixed and verified
+`;
     }
 
-    incrementVersion(version) {
-        const parts = version.split('.');
-        parts[2] = parseInt(parts[2]) + 1;
-        return parts.join('.');
+    // Weekly maintenance helpers
+    updateDependencies() {
+        const packageFile = 'package.json';
+        try {
+            if (fs.existsSync(packageFile)) {
+                const pkg = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
+                pkg._lastMaintenance = new Date().toISOString().split('T')[0];
+                fs.writeFileSync(packageFile, JSON.stringify(pkg, null, 2));
+                this.commitFile(packageFile, 'chore: update package maintenance timestamp');
+            }
+        } catch (error) {
+            console.error('Warning: Could not update dependencies:', error.message);
+        }
     }
 
-    // Enhanced commit statistics
+    cleanupTempFiles() {
+        const cleanupLog = 'cleanup.log';
+        const timestamp = new Date().toISOString().split('T')[0];
+        const content = `${timestamp}: Cleaned up temporary files and optimized storage\n`;
+        
+        fs.appendFileSync(cleanupLog, content);
+        this.commitFile(cleanupLog, 'chore: cleanup temporary files');
+    }
+
+    updateReadme() {
+        const readmeFile = 'README.md';
+        const timestamp = new Date().toISOString().split('T')[0];
+        
+        if (!fs.existsSync(readmeFile)) {
+            const content = `# Commit Booster
+
+Automated GitHub commit generation tool.
+
+Last updated: ${timestamp}
+
+## Features
+- Daily automated commits
+- Batch generation
+- Web dashboard
+- Multiple commit types
+
+## Quick Start
+\`\`\`bash
+npm run auto
+\`\`\`
+`;
+            fs.writeFileSync(readmeFile, content);
+        } else {
+            const updateLine = `\nLast maintenance: ${timestamp}\n`;
+            fs.appendFileSync(readmeFile, updateLine);
+        }
+        
+        this.commitFile(readmeFile, 'docs: update README with maintenance info');
+    }
+
+    archiveOldLogs() {
+        const archiveFile = 'logs/archive.md';
+        this.ensureDirectoryExists('logs');
+        
+        const timestamp = new Date().toISOString().split('T')[0];
+        const content = `\n## Archive ${timestamp}\n- Archived old log entries\n- Optimized log storage\n- Maintained system performance\n`;
+        
+        if (!fs.existsSync(archiveFile)) {
+            fs.writeFileSync(archiveFile, '# Log Archive\n');
+        }
+        
+        fs.appendFileSync(archiveFile, content);
+        this.commitFile(archiveFile, 'chore: archive old log entries');
+    }
+
+    generateWeeklyReport(date) {
+        const reportFile = `reports/weekly-${date}.md`;
+        this.ensureDirectoryExists('reports');
+        
+        const content = `# Weekly Report - ${date}
+
+## Summary
+- System maintenance completed
+- Dependencies updated
+- Temporary files cleaned
+- Documentation updated
+- Logs archived
+
+## Performance
+- All systems operational
+- No critical issues
+- Automated processes running smoothly
+
+## Next Week
+- Continue automated operations
+- Monitor system performance
+- Plan feature enhancements
+`;
+        
+        fs.writeFileSync(reportFile, content);
+        this.commitFile(reportFile, `docs: add weekly report for ${date}`);
+    }
+
+    // Enhanced statistics
     getDetailedStats() {
         try {
-            const today = execSync('git log --oneline --since="1 day ago" | wc -l', { encoding: 'utf8' });
-            const week = execSync('git log --oneline --since="1 week ago" | wc -l', { encoding: 'utf8' });
-            const month = execSync('git log --oneline --since="1 month ago" | wc -l', { encoding: 'utf8' });
+            const today = execSync('git log --oneline --since="1 day ago" | wc -l', { encoding: 'utf8' }).trim();
+            const week = execSync('git log --oneline --since="1 week ago" | wc -l', { encoding: 'utf8' }).trim();
+            const month = execSync('git log --oneline --since="1 month ago" | wc -l', { encoding: 'utf8' }).trim();
+            const total = execSync('git rev-list --count HEAD', { encoding: 'utf8' }).trim();
             
-            console.log(`📊 Commit Statistics:`);
-            console.log(`   Today: ${today.trim()} commits`);
-            console.log(`   This week: ${week.trim()} commits`);
-            console.log(`   This month: ${month.trim()} commits`);
+            console.log('📊 Detailed Commit Statistics:');
+            console.log(`   Today: ${today} commits`);
+            console.log(`   This week: ${week} commits`);
+            console.log(`   This month: ${month} commits`);
+            console.log(`   Total: ${total} commits`);
+            
+            // Get recent commits
+            const recent = execSync('git log --oneline -5', { encoding: 'utf8' });
+            console.log('\n📝 Recent Commits:');
+            console.log(recent);
+            
         } catch (error) {
-            console.log('💡 Git statistics unavailable');
+            console.error('❌ Error getting statistics:', error.message);
+            console.log('💡 Make sure you have commits in your repository');
         }
     }
 }
