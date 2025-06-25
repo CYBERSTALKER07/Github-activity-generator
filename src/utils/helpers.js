@@ -2828,3 +2828,10 @@ function throttle(...args) {
     console.log('throttle called with:', args);
     return args[0];
 }
+
+// merge helper method - Added 2025-06-25
+function merge(...args) {
+    // TODO: Implement merge functionality
+    console.log('merge called with:', args);
+    return args[0];
+}
