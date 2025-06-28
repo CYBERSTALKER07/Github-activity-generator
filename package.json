@@ -15,7 +15,7 @@
     "docs": "node commit-booster.js docs",
     "tests": "node commit-booster.js tests",
     "feature": "node commit-booster.js feature",
-    "refactor": "node commit-booster.js refactor",
+    "refactor": "node commit-booster.js refactor" ,
     "bugfix": "node commit-booster.js bugfix",
     "maintenance": "node commit-booster.js maintenance",
     "stats": "node commit-booster.js stats",
