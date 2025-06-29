@@ -2856,3 +2856,10 @@ function omit(...args) {
     console.log('omit called with:', args);
     return args[0];
 }
+
+// debounce helper method - Added 2025-06-29
+function debounce(...args) {
+    // TODO: Implement debounce functionality
+    console.log('debounce called with:', args);
+    return args[0];
+}
