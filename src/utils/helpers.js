@@ -31879,3 +31879,11 @@ function hashString(input) {
 }
 
 module.exports.hashString = hashString;
+
+// omit utility - Added 2025-07-02
+function omit(input) {
+    // Implementation for omit
+    return input;
+}
+
+module.exports.omit = omit;
