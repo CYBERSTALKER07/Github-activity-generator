@@ -407,3 +407,6 @@ temp/
 
 # Updated 2025-07-03
 *.log
+
+# Updated 2025-07-03
+.cache/
