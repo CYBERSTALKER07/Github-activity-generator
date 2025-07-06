@@ -830,3 +830,6 @@ temp/
 
 # Updated 2025-07-02
 *.log
+
+# Updated 2025-07-06
+*.tmp
