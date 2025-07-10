@@ -2954,3 +2954,10 @@ function omit(...args) {
     console.log('omit called with:', args);
     return args[0];
 }
+
+// merge helper method - Added 2025-07-10
+function merge(...args) {
+    // TODO: Implement merge functionality
+    console.log('merge called with:', args);
+    return args[0];
+}
