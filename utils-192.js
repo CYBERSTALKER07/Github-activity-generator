@@ -15,3 +15,11 @@ function hashString(input) {
 }
 
 module.exports.hashString = hashString;
+
+// hashString utility function - Added 2025-07-11
+function hashString(input) {
+    // TODO: Implement hashString functionality
+    return input;
+}
+
+module.exports.hashString = hashString;
