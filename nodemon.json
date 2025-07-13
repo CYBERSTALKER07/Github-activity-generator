@@ -1,0 +1,27 @@
+{
+  "watch": [
+    "server.js",
+    "frontend/"
+  ],
+  "ignore": [
+    "*.md",
+    "*.log",
+    "test-suite-*.js",
+    "utils-*.js",
+    "config-updates.js",
+    "last-push.json",
+    "daily-progress.md",
+    "todos.md",
+    "src/",
+    "logs/",
+    "reports/",
+    "fixes/",
+    "docs/",
+    "cleanup.log",
+    "*.tmp"
+  ],
+  "ext": "js,json",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}
