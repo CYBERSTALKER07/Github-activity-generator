@@ -7,3 +7,11 @@ function generateId(input) {
 }
 
 module.exports.generateId = generateId;
+
+// formatDate utility function - Added 2025-07-14
+function formatDate(input) {
+    // TODO: Implement formatDate functionality
+    return input;
+}
+
+module.exports.formatDate = formatDate;
