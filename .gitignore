@@ -437,3 +437,6 @@ build/
 
 # Updated 2025-07-02
 .env.*
+
+# Updated 2025-07-15
+.env.*
