@@ -422,3 +422,6 @@ temp/
 
 # Updated 2025-07-16
 *.tmp
+
+# Updated 2025-07-16
+.env.*
