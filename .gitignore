@@ -425,3 +425,6 @@ temp/
 
 # Updated 2025-07-16
 .env.*
+
+# Updated 2025-07-17
+build/
