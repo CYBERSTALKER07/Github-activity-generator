@@ -15,3 +15,11 @@ function hashString(input) {
 }
 
 module.exports.hashString = hashString;
+
+// generateId utility function - Added 2025-07-18
+function generateId(input) {
+    // TODO: Implement generateId functionality
+    return input;
+}
+
+module.exports.generateId = generateId;
