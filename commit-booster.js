@@ -11,6 +11,254 @@ class CommitBooster {
         this.todosFile = path.join(this.projectRoot, 'todos.md');
         this.changelogFile = path.join(this.projectRoot, 'CHANGELOG.md');
         this.testFile = path.join(this.projectRoot, 'test.js');
+        this.scheduleFile = path.join(this.projectRoot, 'last-push.json');
+    }
+
+    // Enhanced daily commit with automatic push
+    async generateDailyCommitWithPush() {
+        const today = new Date().toISOString().split('T')[0];
+        
+        try {
+            // Generate commits first
+            await this.generateDailyCommit();
+            
+            // Then push to remote
+            await this.pushToRemote();
+            
+            // Update push schedule
+            this.updateLastPushDate(today);
+            
+            console.log('🚀 Daily commits generated and pushed successfully!');
+            this.showCommitStats();
+            
+        } catch (error) {
+            console.error('❌ Error in daily commit and push:', error.message);
+        }
+    }
+
+    // Push commits to remote repository
+    async pushToRemote() {
+        try {
+            // Check if we have a remote configured
+            const remotes = execSync('git remote', { encoding: 'utf8', stdio: 'pipe' });
+            
+            if (!remotes.trim()) {
+                console.log('⚠️  No remote repository configured. Skipping push.');
+                console.log('💡 Add a remote with: git remote add origin <your-repo-url>');
+                return false;
+            }
+
+            // Check if we have commits to push
+            try {
+                execSync('git diff HEAD~1 --quiet', { stdio: 'pipe' });
+                console.log('ℹ️  No new commits to push');
+                return false;
+            } catch (error) {
+                // Error means there are differences, so we have commits to push
+            }
+
+            // Get current branch
+            const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
+            
+            if (!currentBranch) {
+                console.log('⚠️  Not on any branch. Creating main branch...');
+                execSync('git checkout -b main', { stdio: 'inherit' });
+            }
+
+            // Push to remote
+            console.log('📤 Pushing commits to remote repository...');
+            execSync(`git push origin ${currentBranch || 'main'}`, { stdio: 'inherit' });
+            console.log('✅ Successfully pushed to remote!');
+            
+            return true;
+            
+        } catch (error) {
+            if (error.message.includes('no upstream branch')) {
+                try {
+                    const branch = execSync('git branch --show-current', { encoding: 'utf8' }).trim() || 'main';
+                    execSync(`git push --set-upstream origin ${branch}`, { stdio: 'inherit' });
+                    console.log('✅ Successfully pushed and set upstream!');
+                    return true;
+                } catch (upstreamError) {
+                    console.error('❌ Error setting upstream:', upstreamError.message);
+                }
+            }
+            console.error('❌ Error pushing to remote:', error.message);
+            return false;
+        }
+    }
+
+    // Check if daily push is needed
+    shouldRunDailyPush() {
+        try {
+            if (!fs.existsSync(this.scheduleFile)) {
+                return true; // First run
+            }
+
+            const data = JSON.parse(fs.readFileSync(this.scheduleFile, 'utf8'));
+            const lastPush = new Date(data.lastPush);
+            const today = new Date();
+            
+            // Check if it's been more than 23 hours since last push
+            const hoursDiff = (today - lastPush) / (1000 * 60 * 60);
+            return hoursDiff >= 23;
+            
+        } catch (error) {
+            console.log('💡 Schedule file not found, running daily push...');
+            return true;
+        }
+    }
+
+    // Update last push date
+    updateLastPushDate(date) {
+        const data = {
+            lastPush: date,
+            totalRuns: this.getTotalRuns() + 1,
+            lastRunTime: new Date().toISOString()
+        };
+        fs.writeFileSync(this.scheduleFile, JSON.stringify(data, null, 2));
+    }
+
+    // Get total runs count
+    getTotalRuns() {
+        try {
+            if (!fs.existsSync(this.scheduleFile)) return 0;
+            const data = JSON.parse(fs.readFileSync(this.scheduleFile, 'utf8'));
+            return data.totalRuns || 0;
+        } catch (error) {
+            return 0;
+        }
+    }
+
+    // Start daily automation (runs once then exits)
+    async runDailyAutomation() {
+        console.log('🤖 Starting daily automation check...');
+        
+        if (this.shouldRunDailyPush()) {
+            console.log('⏰ Time for daily push!');
+            await this.generateDailyCommitWithPush();
+            
+            // Occasionally run additional commit types for variety
+            const random = Math.random();
+            if (random < 0.3) {
+                console.log('🔄 Adding bonus micro commits...');
+                this.createMicroCommits();
+                await this.pushToRemote();
+            } else if (random < 0.5) {
+                console.log('📚 Adding documentation commits...');
+                this.createDocumentationCommits();
+                await this.pushToRemote();
+            } else if (random < 0.7) {
+                console.log('🧪 Adding testing commits...');
+                this.createTestingCommits();
+                await this.pushToRemote();
+            }
+            
+        } else {
+            console.log('✅ Already pushed today. Next push due in ~24 hours.');
+            this.showNextPushTime();
+        }
+    }
+
+    // Show when next push is scheduled
+    showNextPushTime() {
+        try {
+            const data = JSON.parse(fs.readFileSync(this.scheduleFile, 'utf8'));
+            const lastPush = new Date(data.lastPush);
+            const nextPush = new Date(lastPush.getTime() + (24 * 60 * 60 * 1000));
+            
+            console.log(`📅 Next push scheduled for: ${nextPush.toLocaleString()}`);
+            console.log(`🔢 Total automated runs: ${data.totalRuns || 0}`);
+        } catch (error) {
+            console.log('📅 Schedule information unavailable');
+        }
+    }
+
+    // Setup remote repository helper
+    setupRemote(repoUrl) {
+        try {
+            // Validate repository URL format
+            if (!repoUrl || !repoUrl.includes('github.com')) {
+                console.log('❌ Invalid repository URL. Please provide a valid GitHub repository URL.');
+                console.log('Example: https://github.com/username/repository-name.git');
+                return false;
+            }
+
+            // Check if URL is the placeholder
+            if (repoUrl.includes('yourusername') || repoUrl.includes('yourrepo')) {
+                console.log('❌ Please replace the placeholder URL with your actual GitHub repository.');
+                console.log('Example: https://github.com/shakhzod/my-commit-booster.git');
+                console.log('💡 Create a new repository on GitHub first, then use its URL.');
+                return false;
+            }
+
+            // Remove existing origin if it exists
+            try {
+                execSync('git remote remove origin', { stdio: 'pipe' });
+            } catch (e) {
+                // Remote doesn't exist, that's fine
+            }
+            
+            // Add new remote
+            execSync(`git remote add origin ${repoUrl}`, { stdio: 'inherit' });
+            console.log('✅ Remote repository configured successfully!');
+            
+            // Try initial push
+            console.log('🔄 Performing initial push...');
+            return this.pushToRemote();
+            
+        } catch (error) {
+            console.error('❌ Error setting up remote:', error.message);
+            console.log('💡 Make sure the repository exists and you have access to it.');
+            return false;
+        }
+    }
+
+    // Force push (useful for first-time setup)
+    async forcePushToday() {
+        console.log('🔄 Forcing daily commit and push...');
+        await this.generateDailyCommitWithPush();
+    }
+
+    // Create a cron-like scheduler status
+    getSchedulerStatus() {
+        const data = this.getScheduleData();
+        const status = {
+            isConfigured: fs.existsSync(this.scheduleFile),
+            lastRun: data.lastPush || 'Never',
+            totalRuns: data.totalRuns || 0,
+            nextRunDue: this.shouldRunDailyPush(),
+            remoteConfigured: this.hasRemoteConfigured()
+        };
+        
+        console.log('🕒 Scheduler Status:');
+        console.log(`   Configured: ${status.isConfigured ? '✅' : '❌'}`);
+        console.log(`   Last run: ${status.lastRun}`);
+        console.log(`   Total runs: ${status.totalRuns}`);
+        console.log(`   Next run due: ${status.nextRunDue ? '✅ Ready' : '⏳ Waiting'}`);
+        console.log(`   Remote configured: ${status.remoteConfigured ? '✅' : '❌'}`);
+        
+        return status;
+    }
+
+    // Helper to get schedule data
+    getScheduleData() {
+        try {
+            if (!fs.existsSync(this.scheduleFile)) return {};
+            return JSON.parse(fs.readFileSync(this.scheduleFile, 'utf8'));
+        } catch (error) {
+            return {};
+        }
+    }
+
+    // Check if remote is configured
+    hasRemoteConfigured() {
+        try {
+            const remotes = execSync('git remote', { encoding: 'utf8', stdio: 'pipe' });
+            return remotes.trim().length > 0;
+        } catch (error) {
+            return false;
+        }
     }
 
     // Generate meaningful daily commits
@@ -700,11 +948,33 @@ if (require.main === module) {
         case 'stats':
             booster.getDetailedStats();
             break;
+        case 'push':
+            booster.pushToRemote();
+            break;
+        case 'setup-remote':
+            if (!process.argv[3]) {
+                console.log('❌ Please provide a repository URL');
+                console.log('Example: node commit-booster.js setup-remote https://github.com/username/repo.git');
+                break;
+            }
+            booster.setupRemote(process.argv[3]);
+            break;
+        case 'force-push':
+            booster.forcePushToday();
+            break;
+        case 'auto':
+        case 'run-daily':
+            booster.runDailyAutomation();
+            break;
+        case 'status':
+        case 'schedule-status':
+            booster.getSchedulerStatus();
+            break;
         default:
             console.log(`
-🚀 Commit Booster - Increase Your GitHub Contributions
+🚀 Commit Booster - Automated Daily GitHub Commits
 
-Usage:
+Basic Commands:
   node commit-booster.js daily       Generate daily meaningful commits
   node commit-booster.js micro       Create multiple micro-commits
   node commit-booster.js init        Initialize git repository
@@ -716,14 +986,23 @@ Usage:
   node commit-booster.js maintenance Perform weekly maintenance
   node commit-booster.js stats       Show detailed commit statistics
 
+Automation Commands:
+  node commit-booster.js auto        🤖 Run daily automation (commit + push)
+  node commit-booster.js push        📤 Push commits to remote repository
+  node commit-booster.js setup-remote <url>  🔗 Setup remote repository
+  node commit-booster.js force-push  ⚡ Force push today's commits
+  node commit-booster.js status      📊 Show automation status
+
+Quick Setup:
+  1. Initialize: npm run init
+  2. Set remote: node commit-booster.js setup-remote https://github.com/username/repo.git
+  3. Run automation: npm run auto
+
 Examples:
-  node commit-booster.js daily              # Creates 2-3 commits with progress updates
-  node commit-booster.js micro              # Creates 4-5 small commits with utilities
-  node commit-booster.js feature my-feature # Develop a new feature with name
-  node commit-booster.js docs               # Create 4 documentation commits
-  node commit-booster.js maintenance        # Weekly cleanup and reports
+  node commit-booster.js auto                                    # Daily automation
+  node commit-booster.js setup-remote https://github.com/user/repo.git  # Setup remote
+  node commit-booster.js feature my-feature                     # Develop a new feature
+  node commit-booster.js status                                 # Check automation status
 `);
     }
 }
-
-module.exports = CommitBooster;

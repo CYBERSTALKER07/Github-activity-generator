@@ -17,6 +17,12 @@
     "bugfix": "node commit-booster.js bugfix",
     "maintenance": "node commit-booster.js maintenance",
     "stats": "node commit-booster.js stats",
+    "auto": "node commit-booster.js auto",
+    "push": "node commit-booster.js push",
+    "force-push": "node commit-booster.js force-push",
+    "status": "node commit-booster.js status",
+    "setup-automation": "./setup-automation.sh",
+    "deploy": "./deploy.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -24,7 +30,9 @@
     "github",
     "commits",
     "automation",
-    "contributions"
+    "contributions",
+    "daily",
+    "scheduler"
   ],
   "author": "",
   "license": "ISC"
