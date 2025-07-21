@@ -1,0 +1,24 @@
+{
+  "name": "commit-booster",
+  "version": "1.0.0",
+  "description": "Automate meaningful GitHub commits to boost your contribution graph",
+  "main": "commit-booster.js",
+  "bin": {
+    "commit-booster": "./commit-booster.js"
+  },
+  "scripts": {
+    "daily": "node commit-booster.js daily",
+    "micro": "node commit-booster.js micro",
+    "init": "node commit-booster.js init",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "commits",
+    "automation",
+    "contributions"
+  ],
+  "author": "",
+  "license": "ISC"
+}
