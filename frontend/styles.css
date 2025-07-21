@@ -20,13 +20,6 @@
     --glow-green: 0 0 10px #00ff41;
     --glow-cyan: 0 0 10px #00ffff;
     --font-mono: 'JetBrains Mono', 'Share Tech Mono', monospace;
-    
-    /* Mobile-first breakpoints */
-    --mobile-small: 320px;
-    --mobile-medium: 480px;
-    --tablet: 768px;
-    --desktop-small: 1024px;
-    --desktop-large: 1400px;
 }
 
 /* Global reset and base styles */
@@ -46,13 +39,11 @@ body {
     background: var(--terminal-bg);
     color: var(--text-primary);
     line-height: 1.4;
-    font-size: clamp(12px, 2.5vw, 14px); /* Responsive font size */
+    font-size: 14px;
     position: relative;
-    /* Enable smooth scrolling on mobile */
-    -webkit-overflow-scrolling: touch;
 }
 
-/* Enhanced Matrix background animation */
+/* Matrix background animation */
 .matrix-bg {
     position: fixed;
     top: 0;
@@ -72,7 +63,7 @@ body {
     50% { opacity: 0.8; }
 }
 
-/* Enhanced Scan lines effect - responsive */
+/* Scan lines effect */
 .scan-lines {
     position: fixed;
     top: 0;
@@ -89,8 +80,6 @@ body {
     pointer-events: none;
     z-index: -1;
     animation: scanMove 0.5s linear infinite;
-    /* Reduce on mobile for performance */
-    opacity: 1;
 }
 
 @keyframes scanMove {
@@ -98,11 +87,11 @@ body {
     100% { transform: translateY(4px); }
 }
 
-/* Enhanced Terminal container with mobile-first approach */
+/* Terminal container */
 .terminal-container {
-    max-width: min(1400px, 100vw);
+    max-width: 1400px;
     margin: 0 auto;
-    padding: clamp(10px, 3vw, 20px);
+    padding: 20px;
     background: rgba(0, 0, 0, 0.8);
     border: 2px solid var(--border-cyber);
     border-radius: 8px;
@@ -110,22 +99,17 @@ body {
         var(--glow-green),
         inset 0 0 20px rgba(0, 255, 65, 0.1);
     backdrop-filter: blur(5px);
-    /* Mobile optimization */
-    min-height: 100vh;
-    position: relative;
 }
 
-/* Enhanced Terminal header with better mobile layout */
+/* Terminal header with controls */
 .terminal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: clamp(8px, 2vw, 15px) clamp(10px, 3vw, 15px);
+    padding: 10px 15px;
     background: var(--terminal-dark);
     border-bottom: 1px solid var(--border-cyber);
-    margin-bottom: clamp(15px, 4vw, 20px);
-    flex-wrap: wrap;
-    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .terminal-controls {
@@ -211,43 +195,29 @@ body {
     }
 }
 
-/* Enhanced ASCII art header with better mobile scaling */
+/* ASCII art header */
 .ascii-header {
     text-align: center;
-    margin-bottom: clamp(20px, 5vw, 30px);
-    overflow-x: auto;
-    /* Hide scrollbar but keep functionality */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.ascii-header::-webkit-scrollbar {
-    display: none;
+    margin-bottom: 30px;
 }
 
 .ascii-art {
-    font-size: clamp(4px, 1.5vw, 8px);
+    font-size: 8px;
     color: var(--primary-green);
     text-shadow: var(--glow-green);
     margin-bottom: 15px;
     overflow-x: auto;
     white-space: pre;
     line-height: 1;
-    /* Ensure minimum readability */
-    min-width: max-content;
-    /* Center on small screens */
-    display: inline-block;
 }
 
 .system-info {
     display: flex;
     justify-content: center;
-    gap: clamp(10px, 4vw, 30px);
-    font-size: clamp(10px, 2vw, 12px);
+    gap: 30px;
+    font-size: 12px;
     color: var(--text-secondary);
     flex-wrap: wrap;
-    /* Better mobile layout */
-    align-items: center;
 }
 
 .system-status {
@@ -314,32 +284,22 @@ body {
     51%, 100% { opacity: 0; }
 }
 
-/* Enhanced Metrics matrix with horizontal layout support */
+/* Metrics matrix */
 .metrics-matrix {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(240px, 45vw, 280px), 1fr));
-    gap: clamp(15px, 4vw, 20px);
-    margin-bottom: clamp(30px, 6vw, 40px);
-    /* Horizontal scroll on very small screens */
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--primary-green) transparent;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
 }
 
-/* Enhanced Metric box with better mobile interaction */
 .metric-box {
     background: rgba(0, 0, 0, 0.7);
     border: 1px solid var(--border-cyber);
     border-radius: 6px;
-    padding: clamp(15px, 4vw, 20px);
+    padding: 20px;
     position: relative;
     transition: all 0.3s ease;
     overflow: hidden;
-    /* Better touch targets */
-    min-height: 120px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 
 .metric-box::before {
@@ -467,23 +427,16 @@ body {
 /* Hacker controls section */
 .hacker-controls {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(20px, 5vw, 30px);
-    margin-bottom: clamp(30px, 6vw, 40px);
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
 }
 
-/* Horizontal layout for larger screens */
-@media (min-width: 1024px) {
-    .hacker-controls {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-.control-section, .activity-terminal {
+.control-section {
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid var(--border-cyber);
     border-radius: 6px;
-    padding: clamp(15px, 4vw, 25px);
+    padding: 25px;
 }
 
 .section-title {
@@ -526,45 +479,31 @@ body {
     50% { opacity: 0.7; transform: scale(1.1); }
 }
 
-/* Enhanced Command grid with better mobile layout */
+/* Command grid */
 .command-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 40vw, 200px), 1fr));
-    gap: clamp(10px, 3vw, 15px);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
     margin-bottom: 25px;
-    /* Horizontal scroll for small screens */
-    overflow-x: auto;
-    padding-bottom: 10px;
 }
 
-/* Enhanced Hacker button with better mobile touch targets */
 .hacker-btn {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid var(--border-cyber);
     color: var(--text-primary);
-    padding: clamp(12px, 3vw, 15px);
+    padding: 15px;
     border-radius: 4px;
     cursor: pointer;
     font-family: var(--font-mono);
-    font-size: clamp(10px, 2.5vw, 12px);
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: clamp(8px, 2vw, 12px);
+    gap: 12px;
     position: relative;
     overflow: hidden;
-    /* Better mobile touch targets */
-    min-height: 48px;
-    min-width: 120px;
-    /* Prevent text selection on touch */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    /* Better touch feedback */
-    -webkit-tap-highlight-color: rgba(0, 255, 65, 0.3);
 }
 
 .hacker-btn::before {
@@ -694,21 +633,24 @@ input:checked + .switch-slider:before {
     letter-spacing: 0.5px;
 }
 
-/* Enhanced Activity terminal with better mobile scrolling */
+/* Activity terminal */
+.activity-terminal {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-cyber);
+    border-radius: 6px;
+    padding: 25px;
+}
+
 .terminal-output {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(0, 255, 65, 0.3);
     border-radius: 4px;
-    padding: clamp(10px, 3vw, 15px);
-    max-height: clamp(300px, 50vh, 400px);
+    padding: 15px;
+    max-height: 400px;
     overflow-y: auto;
     font-family: var(--font-mono);
-    font-size: clamp(10px, 2.5vw, 12px);
+    font-size: 12px;
     line-height: 1.6;
-    /* Better mobile scrolling */
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: var(--primary-green) transparent;
 }
 
 .log-entry {
@@ -731,18 +673,18 @@ input:checked + .switch-slider:before {
 .log-entry.error .timestamp { color: var(--error-red); }
 .log-entry.warning .timestamp { color: var(--warning-orange); }
 
-/* Enhanced Configuration matrix with better mobile forms */
+/* Configuration matrix */
 .config-matrix {
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid var(--border-cyber);
     border-radius: 6px;
-    padding: clamp(15px, 4vw, 25px);
-    margin-bottom: clamp(20px, 5vw, 30px);
+    padding: 25px;
+    margin-bottom: 30px;
 }
 
 .config-grid {
     display: grid;
-    gap: clamp(15px, 4vw, 20px);
+    gap: 20px;
 }
 
 .config-item {
@@ -751,36 +693,67 @@ input:checked + .switch-slider:before {
     gap: 10px;
 }
 
+.config-label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
 .input-group {
     display: flex;
     gap: 10px;
-    align-items: stretch;
-    flex-wrap: wrap;
+    align-items: center;
 }
 
 .cyber-input {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid var(--border-cyber);
     color: var(--text-primary);
-    padding: clamp(8px, 2vw, 12px);
+    padding: 10px 12px;
     border-radius: 4px;
     font-family: var(--font-mono);
-    font-size: clamp(10px, 2.5vw, 12px);
+    font-size: 12px;
     flex: 1;
-    min-width: 200px;
-    max-width: 100%;
+    max-width: 400px;
     transition: all 0.3s ease;
-    /* Better mobile input */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
 }
 
-/* Enhanced Checkbox matrix with better mobile touch targets */
+.cyber-input:focus {
+    outline: none;
+    box-shadow: var(--glow-green);
+    border-color: var(--secondary-cyan);
+}
+
+.cyber-input::placeholder {
+    color: var(--text-muted);
+}
+
+.cyber-btn-small {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--border-cyber);
+    color: var(--text-primary);
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.cyber-btn-small:hover {
+    box-shadow: var(--glow-green);
+    border-color: var(--secondary-cyan);
+    transform: translateY(-1px);
+}
+
 .checkbox-matrix {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 30vw, 150px), 1fr));
-    gap: clamp(10px, 3vw, 15px);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
 }
 
 .cyber-checkbox {
@@ -788,15 +761,19 @@ input:checked + .switch-slider:before {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    font-size: clamp(9px, 2vw, 11px);
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: var(--text-secondary);
     transition: color 0.3s ease;
-    /* Better mobile touch targets */
-    min-height: 40px;
-    padding: 5px;
-    -webkit-tap-highlight-color: rgba(0, 255, 65, 0.3);
+}
+
+.cyber-checkbox:hover {
+    color: var(--text-primary);
+}
+
+.cyber-checkbox input {
+    display: none;
 }
 
 .checkmark {
@@ -829,23 +806,24 @@ input:checked + .switch-slider:before {
 .terminal-footer {
     background: var(--terminal-dark);
     border-top: 1px solid var(--border-cyber);
-    padding: clamp(10px, 3vw, 15px);
-    margin-top: clamp(20px, 5vw, 30px);
+    padding: 15px;
+    margin-top: 30px;
 }
 
 .footer-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: clamp(9px, 2vw, 11px);
-    flex-wrap: wrap;
-    gap: 15px;
+    font-size: 11px;
+}
+
+.copyright {
+    color: var(--text-muted);
 }
 
 .footer-links {
     display: flex;
-    gap: clamp(10px, 3vw, 20px);
-    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .cyber-link {
@@ -855,10 +833,11 @@ input:checked + .switch-slider:before {
     display: flex;
     align-items: center;
     gap: 5px;
-    /* Better mobile touch targets */
-    min-height: 32px;
-    padding: 5px;
-    -webkit-tap-highlight-color: rgba(0, 255, 65, 0.3);
+}
+
+.cyber-link:hover {
+    color: var(--primary-green);
+    text-shadow: var(--glow-green);
 }
 
 /* Hacker loading screen */
@@ -940,365 +919,151 @@ input:checked + .switch-slider:before {
     letter-spacing: 2px;
 }
 
-/* Enhanced Notification matrix with better mobile positioning */
+/* Notification matrix */
 .notification-matrix {
     position: fixed;
-    top: clamp(10px, 3vw, 20px);
-    right: clamp(10px, 3vw, 20px);
-    left: clamp(10px, 3vw, auto);
+    top: 20px;
+    right: 20px;
     z-index: 9998;
-    max-width: min(400px, calc(100vw - 40px));
+    max-width: 400px;
 }
 
 .notification {
     background: rgba(0, 0, 0, 0.9);
     border: 1px solid var(--border-cyber);
     border-radius: 4px;
-    padding: clamp(12px, 3vw, 20px) clamp(15px, 4vw, 20px);
+    padding: 15px 20px;
     margin-bottom: 10px;
     color: var(--text-primary);
     font-family: var(--font-mono);
-    font-size: clamp(10px, 2.5vw, 12px);
+    font-size: 12px;
     animation: notificationSlide 0.3s ease;
     box-shadow: var(--glow-green);
     position: relative;
     overflow: hidden;
-    /* Better mobile interaction */
-    -webkit-tap-highlight-color: rgba(0, 255, 65, 0.3);
 }
 
-/* MOBILE-FIRST RESPONSIVE DESIGN */
-
-/* Mobile Small (320px+) */
-@media (max-width: 480px) {
-    body {
-        font-size: 12px;
-    }
-    
-    .scan-lines {
-        opacity: 0.5; /* Reduce for performance */
-    }
-    
-    .terminal-container {
-        padding: 8px;
-        border-radius: 4px;
-        min-height: auto;
-    }
-    
-    .terminal-header {
-        flex-direction: column;
-        gap: 8px;
-        padding: 8px 10px;
-    }
-    
-    .terminal-title {
-        font-size: 14px;
-        order: -1;
-    }
-    
-    .ascii-art {
-        font-size: 3px;
-        margin-bottom: 10px;
-    }
-    
-    .system-info {
-        flex-direction: column;
-        gap: 5px;
-        font-size: 10px;
-    }
-    
-    .metrics-matrix {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        margin-bottom: 20px;
-    }
-    
-    .metric-box {
-        min-height: 100px;
-        padding: 12px;
-    }
-    
-    .metric-value {
-        font-size: 20px;
-    }
-    
-    .command-grid {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    
-    .hacker-btn {
-        min-height: 44px;
-        padding: 10px;
-        font-size: 11px;
-    }
-    
-    .cli-prompt {
-        flex-wrap: wrap;
-        gap: 3px;
-    }
-    
-    .input-group {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
-    
-    .cyber-input {
-        min-width: 100%;
-    }
-    
-    .checkbox-matrix {
-        grid-template-columns: 1fr;
-    }
-    
-    .footer-info {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-    }
-    
-    .footer-links {
-        justify-content: center;
-    }
+.notification::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--success-green);
 }
 
-/* Mobile Medium (480px+) */
-@media (min-width: 481px) and (max-width: 767px) {
-    .command-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .metrics-matrix {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .checkbox-matrix {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.notification.error::before { background: var(--error-red); }
+.notification.warning::before { background: var(--warning-orange); }
+.notification.info::before { background: var(--secondary-cyan); }
+
+@keyframes notificationSlide {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
-/* Tablet (768px+) */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .terminal-container {
-        padding: 15px;
-    }
-    
-    .command-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .metrics-matrix {
-        grid-template-columns: repeat(2, 1fr);
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+    border-radius: 4px;
+    box-shadow: var(--glow-green);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-cyan);
+    box-shadow: var(--glow-cyan);
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .hacker-controls {
+        grid-template-columns: 1fr;
     }
     
     .ascii-art {
         font-size: 6px;
     }
     
-    .system-info {
-        flex-direction: row;
-        gap: 20px;
-    }
-}
-
-/* Desktop Small (1024px+) */
-@media (min-width: 1024px) {
-    .hacker-controls {
-        grid-template-columns: 1fr 1fr;
-    }
-    
-    .command-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
     .metrics-matrix {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .checkbox-matrix {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 }
 
-/* Desktop Large (1400px+) */
-@media (min-width: 1400px) {
+@media (max-width: 768px) {
     .terminal-container {
-        padding: 20px;
-    }
-    
-    .ascii-art {
-        font-size: 8px;
-    }
-    
-    .command-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-}
-
-/* HORIZONTAL LAYOUT ENHANCEMENTS */
-
-/* Landscape orientation optimizations */
-@media (orientation: landscape) and (max-height: 600px) {
-    .ascii-header {
-        margin-bottom: 15px;
-    }
-    
-    .ascii-art {
-        font-size: 3px;
-        margin-bottom: 8px;
-    }
-    
-    .metrics-matrix {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        margin-bottom: 20px;
-    }
-    
-    .metric-box {
-        min-height: 80px;
         padding: 10px;
     }
     
-    .terminal-output {
-        max-height: 200px;
-    }
-    
-    .hacker-controls {
-        gap: 15px;
-    }
-}
-
-/* Horizontal scroll containers for very small screens */
-@media (max-width: 380px) {
-    .metrics-matrix {
-        display: flex;
-        overflow-x: auto;
-        gap: 15px;
-        padding-bottom: 10px;
-        scroll-snap-type: x mandatory;
-    }
-    
-    .metric-box {
-        flex: 0 0 280px;
-        scroll-snap-align: start;
-    }
-    
     .command-grid {
-        display: flex;
-        overflow-x: auto;
-        gap: 10px;
-        padding-bottom: 10px;
-        scroll-snap-type: x mandatory;
-    }
-    
-    .hacker-btn {
-        flex: 0 0 150px;
-        scroll-snap-align: start;
+        grid-template-columns: 1fr;
     }
     
     .system-info {
-        display: flex;
-        overflow-x: auto;
-        gap: 15px;
-        padding-bottom: 5px;
-        white-space: nowrap;
-    }
-}
-
-/* Enhanced scrollbar styles for horizontal layouts */
-.metrics-matrix::-webkit-scrollbar,
-.command-grid::-webkit-scrollbar,
-.system-info::-webkit-scrollbar {
-    height: 4px;
-}
-
-.metrics-matrix::-webkit-scrollbar-track,
-.command-grid::-webkit-scrollbar-track,
-.system-info::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 2px;
-}
-
-.metrics-matrix::-webkit-scrollbar-thumb,
-.command-grid::-webkit-scrollbar-thumb,
-.system-info::-webkit-scrollbar-thumb {
-    background: var(--primary-green);
-    border-radius: 2px;
-    opacity: 0.6;
-}
-
-/* Touch optimization */
-@media (hover: none) {
-    .hacker-btn:hover,
-    .metric-box:hover,
-    .cyber-link:hover,
-    .cyber-checkbox:hover {
-        transform: none;
+        flex-direction: column;
+        gap: 10px;
     }
     
-    .hacker-btn:active {
-        background: rgba(0, 255, 65, 0.1);
-        transform: scale(0.98);
-    }
-}
-
-/* High DPI display optimization */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .ascii-art {
-        font-size: clamp(5px, 1.8vw, 9px);
+        font-size: 4px;
     }
     
-    .terminal-container {
-        border-width: 1px;
+    .metrics-matrix {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-info {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .checkbox-matrix {
+        grid-template-columns: 1fr;
     }
 }
 
-/* Print styles enhancement */
+@media (max-width: 480px) {
+    .terminal-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .cli-prompt {
+        flex-wrap: wrap;
+    }
+    
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .metric-value {
+        font-size: 24px;
+    }
+}
+
+/* Print styles */
 @media print {
     .matrix-bg,
-    .scan-lines,
-    .hacker-loading,
-    .notification-matrix {
-        display: none !important;
+    .scan-lines {
+        display: none;
     }
     
     body {
-        background: white !important;
-        color: black !important;
-        font-size: 12pt;
+        background: white;
+        color: black;
     }
     
     .terminal-container {
         border: 1px solid black;
         box-shadow: none;
-        background: white;
-        max-width: none;
-    }
-    
-    .hacker-btn,
-    .cyber-input,
-    .cyber-btn-small {
-        border: 1px solid black;
-        background: white;
-        color: black;
-    }
-}
-
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-    .matrix-bg,
-    .scan-lines,
-    .glitch::before,
-    .glitch::after,
-    .loading-spinner,
-    .ring-progress,
-    .cursor.blink {
-        animation: none;
-    }
-    
-    .hacker-btn,
-    .metric-box,
-    .cyber-link {
-        transition: none;
     }
 }
