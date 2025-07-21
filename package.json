@@ -22,6 +22,8 @@
     "push": "node commit-booster.js push",
     "force-push": "node commit-booster.js force-push",
     "auto": "node commit-booster.js auto",
+    "auto-status": "node commit-booster.js status",
+    "setup-daily": "./setup-automation.sh",
     "status": "node commit-booster.js status",
     "batch-month": "node commit-booster.js batch 30 0 70 8 true",
     "batch-year": "node commit-booster.js batch 365 0 80 10 false",
