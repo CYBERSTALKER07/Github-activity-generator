@@ -1,14 +1,10 @@
 {
   "version": 2,
-  "name": "commit-booster-dashboard",
+    "name": "github-activity-generator",
   "builds": [
     {
       "src": "server.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "frontend/**",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -17,10 +13,27 @@
       "dest": "/server.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/frontend/(.*)",
       "dest": "/frontend/$1"
+    },
+    {
+      "src": "/(.*\\.(css|js|html|ico|png|jpg|jpeg|gif|svg))",
+      "dest": "/frontend/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/index.html"
     }
   ],
+  "functions": {
+    "server.js": {
+      "maxDuration": 30
+    }
+  },
   "env": {
     "NODE_ENV": "production"
   }
