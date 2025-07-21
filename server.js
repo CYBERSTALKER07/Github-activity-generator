@@ -243,33 +243,7 @@ if (NODE_ENV !== 'production' || !process.env.VERCEL) {
         if (NODE_ENV === 'development') {
             console.log(`📊 Local Dashboard: http://localhost:${PORT}`);
         }
-        // Simple streak calculation based on commit frequency
-        const commits = execSync('git log --oneline --since="30 days ago" --pretty=format:"%ad" --date=short', { 
-            encoding: 'utf8',
-            cwd: __dirname
-        });
-        
-        const dates = [...new Set(commits.split('\n').filter(Boolean))];
-        return Math.min(dates.length, 30); // Max 30 day streak
-    } catch (error) {
-        return 0;
-    }
+        console.log(`🔌 API Base: /api`);
+        console.log(`❤️  Health Check: /health`);
+    });
 }
-
-// Serve frontend
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
-});
-
-// Start server with improved logging
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Commit Booster Dashboard running on port ${PORT}`);
-    console.log(`🌍 Environment: ${NODE_ENV}`);
-    if (NODE_ENV === 'development') {
-        console.log(`📊 Local Dashboard: http://localhost:${PORT}`);
-    }
-    console.log(`🔌 API Base: /api`);
-    console.log(`❤️  Health Check: /health`);
-});
-
-module.exports = app;
