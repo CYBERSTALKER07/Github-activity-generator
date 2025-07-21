@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>COMMIT_BOOSTER v2.0 - CYBERPUNK TERMINAL</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🤖</text></svg>">
+    <!-- Mobile optimizations -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#00ff41">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🤖</text></svg>">
 </head>
 <body>
     <!-- Matrix background effects -->
@@ -18,9 +23,9 @@
         <!-- Terminal header with controls -->
         <header class="terminal-header">
             <div class="terminal-controls">
-                <div class="control-btn close"></div>
-                <div class="control-btn minimize"></div>
-                <div class="control-btn maximize"></div>
+                <div class="control-btn close" aria-label="Close"></div>
+                <div class="control-btn minimize" aria-label="Minimize"></div>
+                <div class="control-btn maximize" aria-label="Maximize"></div>
             </div>
             <div class="terminal-title glitch" data-text="COMMIT_BOOSTER_v2.0">
                 █ COMMIT_BOOSTER_v2.0 █
@@ -33,7 +38,7 @@
 
         <!-- ASCII Art Header -->
         <div class="ascii-header">
-            <pre class="ascii-art">
+            <pre class="ascii-art" aria-label="Commit Booster ASCII Art">
  ██████╗ ██████╗ ███╗   ███╗███╗   ███╗██╗████████╗    ██████╗  ██████╗  ██████╗ ███████╗████████╗███████╗██████╗ 
 ██╔════╝██╔═══██╗████╗ ████║████╗ ████║██║╚══██╔══╝    ██╔══██╗██╔═══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
 ██║     ██║   ██║██╔████╔██║██╔████╔██║██║   ██║       ██████╔╝██║   ██║██║   ██║███████╗   ██║   █████╗  ██████╔╝
@@ -41,20 +46,20 @@
 ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║ ╚═╝ ██║██║   ██║       ██████╔╝╚██████╔╝╚██████╔╝███████║   ██║   ███████╗██║  ██║
  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚═╝   ╚═╝       ╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
             </pre>
-            <div class="system-info">
+            <div class="system-info" role="status">
                 <span class="system-status" id="system-status">[UPTIME: 00:00:00]</span>
-                <span>|</span>
+                <span class="info-separator">|</span>
                 <span class="status-green">STATUS: OPERATIONAL</span>
-                <span>|</span>
+                <span class="info-separator">|</span>
                 <span>CPU: <span id="cpu-meter">████████░░</span></span>
-                <span>|</span>
+                <span class="info-separator">|</span>
                 <span style="color: #00ffff;">NET: SECURED</span>
             </div>
-        </div>
+        </header>
 
         <!-- CLI Section -->
         <div class="cli-section">
-            <div class="cli-prompt">
+            <div class="cli-prompt" role="textbox" aria-label="Command prompt">
                 <span class="prompt-user">root</span>
                 <span class="prompt-separator">@</span>
                 <span class="prompt-path">commit-booster</span>
@@ -65,50 +70,50 @@
         </div>
 
         <!-- System Metrics Matrix -->
-        <div class="metrics-matrix">
-            <div class="metric-box">
+        <div class="metrics-matrix" role="region" aria-label="System Metrics">
+            <div class="metric-box" tabindex="0" role="button" aria-label="Daily commits metric">
                 <div class="metric-header">
-                    <i class="fas fa-calendar-day" style="color: #00ff41;"></i>
+                    <i class="fas fa-calendar-day" style="color: #00ff41;" aria-hidden="true"></i>
                     <span>DAILY_COMMITS</span>
                 </div>
                 <div class="metric-value glitch-number" data-text="7" id="commits-today">7</div>
-                <div class="metric-bar">
+                <div class="metric-bar" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">
                     <div class="bar-fill" style="width: 35%;"></div>
                 </div>
                 <small style="color: #008800;">Target: 20/day</small>
             </div>
 
-            <div class="metric-box">
+            <div class="metric-box" tabindex="0" role="button" aria-label="Weekly total metric">
                 <div class="metric-header">
-                    <i class="fas fa-chart-line" style="color: #00ffff;"></i>
+                    <i class="fas fa-chart-line" style="color: #00ffff;" aria-hidden="true"></i>
                     <span>WEEKLY_TOTAL</span>
                 </div>
                 <div class="metric-value glitch-number" data-text="42" id="commits-week">42</div>
-                <div class="metric-bar">
+                <div class="metric-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
                     <div class="bar-fill" style="width: 60%;"></div>
                 </div>
                 <small style="color: #008800;">Target: 140/week</small>
             </div>
 
-            <div class="metric-box">
+            <div class="metric-box" tabindex="0" role="button" aria-label="Streak days metric">
                 <div class="metric-header">
-                    <i class="fas fa-fire" style="color: #ff8800;"></i>
+                    <i class="fas fa-fire" style="color: #ff8800;" aria-hidden="true"></i>
                     <span>STREAK_DAYS</span>
                 </div>
                 <div class="metric-value glitch-number" data-text="15" id="streak-days">15</div>
-                <div class="metric-bar">
+                <div class="metric-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                     <div class="bar-fill streak-bar" style="width: 50%;"></div>
                 </div>
                 <small style="color: #008800;">Best: 30 days</small>
             </div>
 
-            <div class="metric-box">
+            <div class="metric-box" tabindex="0" role="button" aria-label="Next execution time">
                 <div class="metric-header">
-                    <i class="fas fa-clock" style="color: #40ff40;"></i>
+                    <i class="fas fa-clock" style="color: #40ff40;" aria-hidden="true"></i>
                     <span>NEXT_EXECUTION</span>
                 </div>
                 <div class="metric-value" id="next-push" style="font-size: 24px;">08:42</div>
-                <div class="countdown-ring">
+                <div class="countdown-ring" aria-hidden="true">
                     <div class="ring-progress"></div>
                 </div>
                 <small style="color: #008800;">Auto-scheduled</small>
@@ -120,60 +125,60 @@
             <!-- Command Control Panel -->
             <div class="control-section">
                 <h2 class="section-title">
-                    <i class="fas fa-terminal"></i>
+                    <i class="fas fa-terminal" aria-hidden="true"></i>
                     COMMAND_PROTOCOLS
                 </h2>
                 
                 <div class="status-display">
-                    <div class="status-indicator">
-                        <div class="status-dot" id="status-dot"></div>
+                    <div class="status-indicator" role="status">
+                        <div class="status-dot" id="status-dot" aria-hidden="true"></div>
                         <span id="status-text">SYSTEM_READY_FOR_EXECUTION</span>
                     </div>
                 </div>
 
-                <div class="command-grid">
-                    <button class="hacker-btn primary-cmd" onclick="runDailyCommits()">
-                        <i class="btn-icon fas fa-calendar-plus"></i>
+                <div class="command-grid" role="group" aria-label="Command buttons">
+                    <button class="hacker-btn primary-cmd" onclick="runDailyCommits()" aria-label="Run daily commits">
+                        <i class="btn-icon fas fa-calendar-plus" aria-hidden="true"></i>
                         <div class="btn-text">
                             <span>DAILY</span>
                             <small>Generate commits</small>
                         </div>
                     </button>
 
-                    <button class="hacker-btn secondary-cmd" onclick="runMicroCommits()">
-                        <i class="btn-icon fas fa-bolt"></i>
+                    <button class="hacker-btn secondary-cmd" onclick="runMicroCommits()" aria-label="Run micro commits">
+                        <i class="btn-icon fas fa-bolt" aria-hidden="true"></i>
                         <div class="btn-text">
                             <span>MICRO</span>
                             <small>Quick burst</small>
                         </div>
                     </button>
 
-                    <button class="hacker-btn info-cmd" onclick="runDocCommits()">
-                        <i class="btn-icon fas fa-file-alt"></i>
+                    <button class="hacker-btn info-cmd" onclick="runDocCommits()" aria-label="Generate documentation commits">
+                        <i class="btn-icon fas fa-file-alt" aria-hidden="true"></i>
                         <div class="btn-text">
                             <span>DOCS</span>
                             <small>Documentation</small>
                         </div>
                     </button>
 
-                    <button class="hacker-btn success-cmd" onclick="runTestCommits()">
-                        <i class="btn-icon fas fa-vial"></i>
+                    <button class="hacker-btn success-cmd" onclick="runTestCommits()" aria-label="Run test suite commits">
+                        <i class="btn-icon fas fa-vial" aria-hidden="true"></i>
                         <div class="btn-text">
                             <span>TESTS</span>
                             <small>Test suite</small>
                         </div>
                     </button>
 
-                    <button class="hacker-btn warning-cmd" onclick="forcePush()">
-                        <i class="btn-icon fas fa-rocket"></i>
+                    <button class="hacker-btn warning-cmd" onclick="forcePush()" aria-label="Force push to repository">
+                        <i class="btn-icon fas fa-rocket" aria-hidden="true"></i>
                         <div class="btn-text">
                             <span>PUSH</span>
                             <small>Force deploy</small>
                         </div>
                     </button>
 
-                    <button class="hacker-btn danger-cmd" onclick="viewLogs()">
-                        <i class="btn-icon fas fa-list-ul"></i>
+                    <button class="hacker-btn danger-cmd" onclick="viewLogs()" aria-label="View system logs">
+                        <i class="btn-icon fas fa-list-ul" aria-hidden="true"></i>
                         <div class="btn-text">
                             <span>LOGS</span>
                             <small>View activity</small>
@@ -183,13 +188,13 @@
 
                 <div class="automation-control">
                     <div class="toggle-container">
-                        <label class="cyber-switch">
-                            <input type="checkbox" id="automation-toggle" checked>
+                        <label class="cyber-switch" for="automation-toggle">
+                            <input type="checkbox" id="automation-toggle" checked aria-describedby="automation-label">
                             <span class="switch-slider">
                                 <span class="switch-text">AUTO</span>
                             </span>
                         </label>
-                        <span class="toggle-label">AUTONOMOUS_MODE</span>
+                        <span class="toggle-label" id="automation-label">AUTONOMOUS_MODE</span>
                     </div>
                 </div>
             </div>
@@ -197,11 +202,11 @@
             <!-- Activity Terminal -->
             <div class="activity-terminal">
                 <h2 class="section-title">
-                    <i class="fas fa-desktop"></i>
+                    <i class="fas fa-desktop" aria-hidden="true"></i>
                     SYSTEM_TERMINAL
                 </h2>
                 
-                <div class="terminal-output" id="activity-list">
+                <div class="terminal-output" id="activity-list" role="log" aria-live="polite" aria-label="System activity log">
                     <!-- Terminal logs will be populated by JavaScript -->
                 </div>
             </div>
@@ -210,60 +215,64 @@
         <!-- Configuration Matrix -->
         <div class="config-matrix">
             <h2 class="section-title">
-                <i class="fas fa-cog"></i>
+                <i class="fas fa-cog" aria-hidden="true"></i>
                 CONFIGURATION_MATRIX
             </h2>
             
             <div class="config-grid">
                 <div class="config-item">
-                    <label class="config-label">REPOSITORY_TARGET</label>
+                    <label class="config-label" for="repo-url">REPOSITORY_TARGET</label>
                     <div class="input-group">
                         <input type="url" id="repo-url" class="cyber-input" 
                                placeholder="https://github.com/user/repo.git" 
-                               value="https://github.com/CYBERSTALKER07/Github-activity-generator.git">
-                        <button class="cyber-btn-small" onclick="changeRepository()">UPDATE</button>
+                               value="https://github.com/CYBERSTALKER07/Github-activity-generator.git"
+                               aria-describedby="repo-url-help">
+                        <button class="cyber-btn-small" onclick="changeRepository()" aria-label="Update repository URL">UPDATE</button>
                     </div>
+                    <small id="repo-url-help" style="color: #008800;">Enter your GitHub repository URL</small>
                 </div>
 
                 <div class="config-item">
-                    <label class="config-label">EXECUTION_SCHEDULE</label>
+                    <label class="config-label" for="schedule-time">EXECUTION_SCHEDULE</label>
                     <div class="input-group">
-                        <input type="time" id="schedule-time" class="cyber-input" value="09:00">
-                        <button class="cyber-btn-small" onclick="updateSchedule()">SET</button>
+                        <input type="time" id="schedule-time" class="cyber-input" value="09:00" 
+                               aria-describedby="schedule-help">
+                        <button class="cyber-btn-small" onclick="updateSchedule()" aria-label="Set schedule time">SET</button>
                     </div>
+                    <small id="schedule-help" style="color: #008800;">Daily execution time</small>
                 </div>
 
                 <div class="config-item">
                     <label class="config-label">COMMIT_PROTOCOLS</label>
-                    <div class="checkbox-matrix">
+                    <div class="checkbox-matrix" role="group" aria-label="Commit protocol options">
                         <label class="cyber-checkbox">
                             <input type="checkbox" checked>
-                            <span class="checkmark"></span>
+                            <span class="checkmark" aria-hidden="true"></span>
                             Daily commits
                         </label>
                         <label class="cyber-checkbox">
                             <input type="checkbox" checked>
-                            <span class="checkmark"></span>
+                            <span class="checkmark" aria-hidden="true"></span>
                             Micro commits
                         </label>
                         <label class="cyber-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="checkmark" aria-hidden="true"></span>
                             Weekend mode
                         </label>
                         <label class="cyber-checkbox">
                             <input type="checkbox" checked>
-                            <span class="checkmark"></span>
+                            <span class="checkmark" aria-hidden="true"></span>
                             Auto push
                         </label>
                         <label class="cyber-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="checkmark" aria-hidden="true"></span>
                             Random timing
                         </label>
                         <label class="cyber-checkbox">
                             <input type="checkbox" checked>
-                            <span class="checkmark"></span>
+                            <span class="checkmark" aria-hidden="true"></span>
                             Smart commits
                         </label>
                     </div>
@@ -278,20 +287,20 @@
                     © 2025 COMMIT_BOOSTER v2.0 - CLASSIFIED CYBERNETICS DIVISION
                 </div>
                 <div class="footer-links">
-                    <a href="#" class="cyber-link">
-                        <i class="fas fa-shield-alt"></i>
+                    <a href="#" class="cyber-link" aria-label="Security settings">
+                        <i class="fas fa-shield-alt" aria-hidden="true"></i>
                         SECURITY
                     </a>
-                    <a href="#" class="cyber-link">
-                        <i class="fas fa-database"></i>
+                    <a href="#" class="cyber-link" aria-label="Database management">
+                        <i class="fas fa-database" aria-hidden="true"></i>
                         DATABASE
                     </a>
-                    <a href="#" class="cyber-link">
-                        <i class="fas fa-network-wired"></i>
+                    <a href="#" class="cyber-link" aria-label="Network status">
+                        <i class="fas fa-network-wired" aria-hidden="true"></i>
                         NETWORK
                     </a>
-                    <a href="#" class="cyber-link">
-                        <i class="fas fa-code"></i>
+                    <a href="#" class="cyber-link" aria-label="View source code">
+                        <i class="fas fa-code" aria-hidden="true"></i>
                         SOURCE
                     </a>
                 </div>
@@ -300,10 +309,10 @@
     </div>
 
     <!-- Hacker Loading Screen -->
-    <div class="hacker-loading" id="loading-overlay">
+    <div class="hacker-loading" id="loading-overlay" role="dialog" aria-modal="true" aria-label="Loading">
         <div class="loading-matrix">
-            <div class="matrix-code"></div>
-            <div class="loading-spinner">
+            <div class="matrix-code" aria-hidden="true"></div>
+            <div class="loading-spinner" aria-hidden="true">
                 <div class="spinner-ring"></div>
                 <div class="spinner-ring"></div>
                 <div class="spinner-ring"></div>
@@ -315,7 +324,7 @@
     </div>
 
     <!-- Notification Matrix -->
-    <div class="notification-matrix" id="notification-container">
+    <div class="notification-matrix" id="notification-container" role="region" aria-live="assertive" aria-label="Notifications">
         <!-- Notifications will be inserted here by JavaScript -->
     </div>
 
