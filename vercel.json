@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "name": "github-activity-generator",
   "builds": [
     {
-      "src": "package.json",
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "server.js",
       "use": "@vercel/node"
     }
   ],
@@ -13,12 +16,12 @@
       "dest": "/server.js"
     },
     {
-      "src": "/(.*\\.(css|js|html|ico|png|jpg|jpeg|gif|svg))",
-      "dest": "/frontend/$1"
-    },
-    {
       "src": "/",
       "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
     }
   ],
   "functions": {

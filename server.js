@@ -232,6 +232,44 @@ app.use((error, req, res, next) => {
     });
 });
 
+// Helper functions
+function shouldRunDailyPush(scheduleData) {
+    if (!scheduleData.lastPush) return true;
+    
+    const lastPush = new Date(scheduleData.lastPush);
+    const now = new Date();
+    const hoursDiff = (now - lastPush) / (1000 * 60 * 60);
+    
+    return hoursDiff >= 23;
+}
+
+function hasRemoteConfigured() {
+    try {
+        const remotes = execSync('git remote', { 
+            encoding: 'utf8',
+            cwd: __dirname
+        });
+        return remotes.trim().length > 0;
+    } catch (error) {
+        return false;
+    }
+}
+
+function calculateStreak() {
+    try {
+        // Simple streak calculation based on commit frequency
+        const commits = execSync('git log --oneline --since="30 days ago" --pretty=format:"%ad" --date=short', { 
+            encoding: 'utf8',
+            cwd: __dirname
+        });
+        
+        const dates = [...new Set(commits.split('\n').filter(Boolean))];
+        return Math.min(dates.length, 30); // Max 30 day streak
+    } catch (error) {
+        return 0;
+    }
+}
+
 // Export for Vercel
 module.exports = app;
 
