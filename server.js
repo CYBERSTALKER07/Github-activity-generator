@@ -4,7 +4,8 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Middleware
 app.use(express.json());
@@ -20,6 +21,16 @@ app.use((req, res, next) => {
     } else {
         next();
     }
+});
+
+// Health check endpoint for production
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        environment: NODE_ENV,
+        uptime: process.uptime()
+    });
 });
 
 // Error handling middleware
@@ -250,11 +261,15 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Commit Booster Dashboard running at http://localhost:${PORT}`);
-    console.log(`📊 Dashboard: http://localhost:${PORT}`);
-    console.log(`🔌 API Base: http://localhost:${PORT}/api`);
+// Start server with improved logging
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Commit Booster Dashboard running on port ${PORT}`);
+    console.log(`🌍 Environment: ${NODE_ENV}`);
+    if (NODE_ENV === 'development') {
+        console.log(`📊 Local Dashboard: http://localhost:${PORT}`);
+    }
+    console.log(`🔌 API Base: /api`);
+    console.log(`❤️  Health Check: /health`);
 });
 
 module.exports = app;
