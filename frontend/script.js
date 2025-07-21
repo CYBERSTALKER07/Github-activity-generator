@@ -64,65 +64,35 @@ class CommitBoosterDashboard {
     }
 
     async executeCommand(command, args = []) {
-        return new Promise((resolve, reject) => {
-            // Simulate API call to backend
-            // In real implementation, this would be an HTTP request to Express server
-            const commandString = `node commit-booster.js ${command} ${args.join(' ')}`.trim();
+        try {
+            const response = await fetch(`/api/execute/${command}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ args })
+            });
             
-            // For demo purposes, simulate different responses
-            setTimeout(() => {
-                const responses = {
-                    'status': {
-                        success: true,
-                        data: {
-                            isConfigured: true,
-                            lastRun: new Date().toISOString().split('T')[0],
-                            totalRuns: Math.floor(Math.random() * 50) + 1,
-                            nextRunDue: Math.random() > 0.5,
-                            remoteConfigured: true
-                        }
-                    },
-                    'daily': {
-                        success: true,
-                        message: 'Daily commits generated successfully',
-                        commits: Math.floor(Math.random() * 3) + 2
-                    },
-                    'micro': {
-                        success: true,
-                        message: 'Micro commits created successfully',
-                        commits: 4
-                    },
-                    'docs': {
-                        success: true,
-                        message: 'Documentation commits generated',
-                        commits: Math.floor(Math.random() * 4) + 1
-                    },
-                    'tests': {
-                        success: true,
-                        message: 'Testing commits created',
-                        commits: Math.floor(Math.random() * 3) + 1
-                    },
-                    'force-push': {
-                        success: true,
-                        message: 'Force push completed successfully',
-                        commits: Math.floor(Math.random() * 5) + 1
-                    }
-                };
-
-                const response = responses[command] || { success: false, error: 'Command not found' };
-                
-                if (response.success) {
-                    resolve(response);
-                } else {
-                    reject(new Error(response.error || 'Command failed'));
-                }
-            }, Math.random() * 2000 + 500);
-        });
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error('Command execution failed:', error);
+            throw error;
+        }
     }
 
     async updateStatus() {
         try {
-            const result = await this.executeCommand('status');
+            const response = await fetch('/api/status');
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const result = await response.json();
             const statusLight = document.getElementById('status-light');
             const statusText = document.getElementById('status-text');
             
@@ -136,23 +106,28 @@ class CommitBoosterDashboard {
                 toggle.checked = data.isConfigured;
             }
         } catch (error) {
+            console.error('Status update failed:', error);
             const statusLight = document.getElementById('status-light');
             const statusText = document.getElementById('status-text');
             statusLight.className = 'status-light inactive';
-            statusText.textContent = 'Status check failed';
+            statusText.textContent = 'API connection failed';
         }
     }
 
     async updateStats() {
         try {
-            // Simulate getting git stats
-            const today = Math.floor(Math.random() * 10) + 1;
-            const week = today + Math.floor(Math.random() * 20) + 5;
-            const streak = Math.floor(Math.random() * 30) + 1;
+            const response = await fetch('/api/stats');
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
             
-            document.getElementById('commits-today').textContent = today;
-            document.getElementById('commits-week').textContent = week;
-            document.getElementById('streak-days').textContent = streak;
+            const result = await response.json();
+            
+            if (result.success && result.stats) {
+                document.getElementById('commits-today').textContent = result.stats.today;
+                document.getElementById('commits-week').textContent = result.stats.week;
+                document.getElementById('streak-days').textContent = result.stats.streak;
+            }
             
             // Calculate next push time
             const now = new Date();
@@ -168,34 +143,68 @@ class CommitBoosterDashboard {
                 hoursUntil > 0 ? `${hoursUntil}h ${minutesUntil}m` : `${minutesUntil}m`;
                 
         } catch (error) {
-            console.error('Failed to update stats:', error);
+            console.error('Stats update failed:', error);
+            // Keep showing placeholder data on error
+            document.getElementById('commits-today').textContent = '--';
+            document.getElementById('commits-week').textContent = '--';
+            document.getElementById('streak-days').textContent = '--';
+            document.getElementById('next-push').textContent = '--:--';
         }
     }
 
     async updateActivityFeed() {
-        const activityList = document.getElementById('activity-list');
-        
-        // Generate sample activity data
-        const activities = [
-            { type: 'commit', title: 'Daily progress update', time: '2 minutes ago', icon: 'fas fa-code-branch' },
-            { type: 'push', title: 'Pushed 3 commits to main', time: '5 minutes ago', icon: 'fas fa-upload' },
-            { type: 'commit', title: 'Add utility functions', time: '1 hour ago', icon: 'fas fa-plus' },
-            { type: 'commit', title: 'Update documentation', time: '2 hours ago', icon: 'fas fa-file-alt' },
-            { type: 'push', title: 'Automated daily push', time: '1 day ago', icon: 'fas fa-robot' }
-        ];
-        
-        activityList.innerHTML = activities.map(activity => `
-            <div class="activity-item">
-                <div class="activity-icon ${activity.type}">
-                    <i class="${activity.icon}"></i>
+        try {
+            const response = await fetch('/api/activity');
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const result = await response.json();
+            const activityList = document.getElementById('activity-list');
+            
+            if (result.success && result.activities.length > 0) {
+                activityList.innerHTML = result.activities.map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-icon ${activity.type}">
+                            <i class="${activity.icon}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>${activity.message}</h4>
+                            <p>${activity.hash} - ${activity.type === 'commit' ? 'Local commit created' : 'Changes pushed to GitHub'}</p>
+                        </div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                `).join('');
+            } else {
+                activityList.innerHTML = `
+                    <div class="activity-item">
+                        <div class="activity-icon commit">
+                            <i class="fas fa-info"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>No recent activity</h4>
+                            <p>Generate some commits to see activity here</p>
+                        </div>
+                        <div class="activity-time">--</div>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Activity feed update failed:', error);
+            const activityList = document.getElementById('activity-list');
+            activityList.innerHTML = `
+                <div class="activity-item">
+                    <div class="activity-icon error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Connection Error</h4>
+                        <p>Unable to fetch activity data</p>
+                    </div>
+                    <div class="activity-time">Error</div>
                 </div>
-                <div class="activity-content">
-                    <h4>${activity.title}</h4>
-                    <p>${activity.type === 'commit' ? 'Local commit created' : 'Changes pushed to GitHub'}</p>
-                </div>
-                <div class="activity-time">${activity.time}</div>
-            </div>
-        `).join('');
+            `;
+        }
     }
 
     async loadConfiguration() {

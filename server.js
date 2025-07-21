@@ -10,13 +10,35 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
 
+// CORS middleware for development
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+    console.error('Server error:', error);
+    res.status(500).json({
+        success: false,
+        error: 'Internal server error'
+    });
+});
+
 // API Routes
 app.get('/api/status', async (req, res) => {
     try {
         // Execute the actual commit booster status command
         const output = execSync('node commit-booster.js status', { 
             encoding: 'utf8',
-            cwd: __dirname
+            cwd: __dirname,
+            timeout: 10000
         });
         
         // Parse the status output (simplified)
@@ -38,9 +60,17 @@ app.get('/api/status', async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
+        console.error('Status check failed:', error.message);
+        res.status(200).json({
             success: false,
-            error: error.message
+            error: error.message,
+            data: {
+                isConfigured: false,
+                lastRun: null,
+                totalRuns: 0,
+                nextRunDue: true,
+                remoteConfigured: false
+            }
         });
     }
 });
