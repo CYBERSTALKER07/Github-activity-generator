@@ -1,9 +1,9 @@
 {
   "version": 2,
-    "name": "github-activity-generator",
+  "name": "github-activity-generator",
   "builds": [
     {
-      "src": "server.js",
+      "src": "package.json",
       "use": "@vercel/node"
     }
   ],
@@ -13,19 +13,11 @@
       "dest": "/server.js"
     },
     {
-      "src": "/frontend/(.*)",
-      "dest": "/frontend/$1"
-    },
-    {
       "src": "/(.*\\.(css|js|html|ico|png|jpg|jpeg|gif|svg))",
       "dest": "/frontend/$1"
     },
     {
       "src": "/",
-      "dest": "/frontend/index.html"
-    },
-    {
-      "src": "/(.*)",
       "dest": "/frontend/index.html"
     }
   ],
@@ -33,8 +25,5 @@
     "server.js": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "NODE_ENV": "production"
   }
 }
