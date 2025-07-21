@@ -9,9 +9,11 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Middleware
 app.use(express.json());
+
+// Serve static files from frontend directory
 app.use(express.static(path.join(__dirname, 'frontend')));
 
-// CORS middleware for development
+// CORS middleware
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -23,22 +25,14 @@ app.use((req, res, next) => {
     }
 });
 
-// Health check endpoint for production
+// Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ 
         status: 'OK', 
         timestamp: new Date().toISOString(),
         environment: NODE_ENV,
-        uptime: process.uptime()
-    });
-});
-
-// Error handling middleware
-app.use((error, req, res, next) => {
-    console.error('Server error:', error);
-    res.status(500).json({
-        success: false,
-        error: 'Internal server error'
+        uptime: process.uptime(),
+        version: '1.0.0'
     });
 });
 
@@ -218,31 +212,37 @@ app.get('/api/logs', async (req, res) => {
     }
 });
 
-// Helper functions
-function shouldRunDailyPush(scheduleData) {
-    if (!scheduleData.lastPush) return true;
-    
-    const lastPush = new Date(scheduleData.lastPush);
-    const now = new Date();
-    const hoursDiff = (now - lastPush) / (1000 * 60 * 60);
-    
-    return hoursDiff >= 23;
-}
-
-function hasRemoteConfigured() {
-    try {
-        const remotes = execSync('git remote', { 
-            encoding: 'utf8',
-            cwd: __dirname
-        });
-        return remotes.trim().length > 0;
-    } catch (error) {
-        return false;
+// Serve frontend for all non-API routes (SPA support)
+app.get('*', (req, res) => {
+    // Skip API routes
+    if (req.path.startsWith('/api')) {
+        return res.status(404).json({ error: 'API endpoint not found' });
     }
-}
+    
+    // Serve index.html for all other routes
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
 
-function calculateStreak() {
-    try {
+// Error handling middleware
+app.use((error, req, res, next) => {
+    console.error('Server error:', error);
+    res.status(500).json({
+        success: false,
+        error: NODE_ENV === 'production' ? 'Internal server error' : error.message
+    });
+});
+
+// Export for Vercel
+module.exports = app;
+
+// Start server only if not in serverless environment
+if (NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`🚀 Commit Booster Dashboard running on port ${PORT}`);
+        console.log(`🌍 Environment: ${NODE_ENV}`);
+        if (NODE_ENV === 'development') {
+            console.log(`📊 Local Dashboard: http://localhost:${PORT}`);
+        }
         // Simple streak calculation based on commit frequency
         const commits = execSync('git log --oneline --since="30 days ago" --pretty=format:"%ad" --date=short', { 
             encoding: 'utf8',
