@@ -238,10 +238,21 @@
                 </div>
                 
                 <div class="config-item">
-                    <label class="config-label">EXECUTION_TIME:</label>
+                    <label class="config-label">EXECUTION_SCHEDULE:</label>
                     <div class="input-group">
                         <input type="time" id="schedule-time" class="cyber-input" value="09:00">
                         <button class="cyber-btn-small" onclick="updateSchedule()">UPDATE</button>
+                    </div>
+                </div>
+                
+                <div class="config-item">
+                    <label class="config-label">COMMIT_FREQUENCY:</label>
+                    <div class="input-group">
+                        <select class="cyber-input" id="commit-frequency">
+                            <option value="daily">DAILY_PROTOCOL</option>
+                            <option value="hourly">HOURLY_BURST</option>
+                            <option value="aggressive">AGGRESSIVE_MODE</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -260,22 +271,19 @@
         </div>
     </div>
 
-    <!-- Hacker Loading Screen -->
-    <div class="hacker-loading" id="loading-overlay">
-        <div class="loading-matrix">
-            <div class="matrix-code"></div>
-            <div class="loading-spinner">
-                <div class="spinner-ring"></div>
-                <div class="spinner-ring"></div>
-                <div class="spinner-ring"></div>
-            </div>
-            <p class="loading-text glitch" id="loading-text" data-text="PROCESSING...">PROCESSING...</p>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text glitch" id="loading-text" data-text="PROCESSING...">PROCESSING...</div>
+        <div class="loading-progress">
+            <div class="progress-bar"></div>
         </div>
     </div>
 
-    <!-- Notification System -->
-    <div class="notification-matrix" id="notification-container"></div>
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
 
+    <!-- JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
