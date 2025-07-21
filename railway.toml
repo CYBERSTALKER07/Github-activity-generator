@@ -1,0 +1,15 @@
+[build]
+  builder = "NIXPACKS"
+
+[deploy]
+  numReplicas = 1
+  sleepThreshold = 0
+  restartPolicyType = "ON_FAILURE"
+
+[[services]]
+  name = "commit-booster-dashboard"
+  source = "."
+  
+[services.variables]
+  NODE_ENV = "production"
+  PORT = "3000"
