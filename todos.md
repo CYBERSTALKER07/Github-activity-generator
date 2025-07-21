@@ -284,3 +284,5 @@
 - [ ] Performance improvements - 7/22/2025
 
 - [ ] Code cleanup - 7/22/2025
+
+- [ ] Documentation updates - 7/22/2025
