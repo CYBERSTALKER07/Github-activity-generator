@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.0.1] - 2025-07-21
+## [v1.0.4] - 2025-07-21
 
 ### Added
 - New commit automation methods
@@ -14,4 +14,4 @@
 ### Fixed
 - Minor bug fixes and improvements
 
-Generated: 2025-07-21T17:12:43.001Z
+Generated: 2025-07-21T17:13:35.004Z
