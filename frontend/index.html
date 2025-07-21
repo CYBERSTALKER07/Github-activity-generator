@@ -3,165 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commit Booster Dashboard</title>
+    <title>COMMIT_BOOSTER.exe - SYSTEM_TERMINAL</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-rocket"></i> Commit Booster Dashboard</h1>
-            <p class="subtitle">Automated GitHub Activity Generator</p>
-        </header>
+    <div class="matrix-bg"></div>
+    <div class="scan-lines"></div>
+    
+    <div class="terminal-container">
+        <!-- Terminal Header -->
+        <div class="terminal-header">
+            <div class="terminal-controls">
+                <span class="control-btn close"></span>
+                <span class="control-btn minimize"></span>
+                <span class="control-btn maximize"></span>
+            </div>
+            <div class="terminal-title">
+                <span class="glitch" data-text="COMMIT_BOOSTER_v2.0.exe">COMMIT_BOOSTER_v2.0.exe</span>
+            </div>
+            <div class="system-time" id="system-time"></div>
+        </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-calendar-day"></i>
+        <!-- ASCII Art Header -->
+        <div class="ascii-header">
+            <pre class="ascii-art">
+ ██████╗ ██████╗ ███╗   ███╗███╗   ███╗██╗████████╗    ██████╗  ██████╗  ██████╗ ███████╗████████╗███████╗██████╗ 
+██╔════╝██╔═══██╗████╗ ████║████╗ ████║██║╚══██╔══╝    ██╔══██╗██╔═══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+██║     ██║   ██║██╔████╔██║██╔████╔██║██║   ██║       ██████╔╝██║   ██║██║   ██║███████╗   ██║   █████╗  ██████╔╝
+██║     ██║   ██║██║╚██╔╝██║██║╚██╔╝██║██║   ██║       ██╔══██╗██║   ██║██║   ██║╚════██║   ██║   ██╔══╝  ██╔══██╗
+╚██████╗╚██████╔╝██║ ╚═╝ ██║██║ ╚═╝ ██║██║   ██║       ██████╔╝╚██████╔╝╚██████╔╝███████║   ██║   ███████╗██║  ██║
+ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚═╝   ╚═╝       ╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+            </pre>
+            <div class="system-info">
+                <span class="system-status" id="system-status">[SYSTEM_ONLINE]</span>
+                <span class="cpu-usage">CPU: <span id="cpu-meter">██████████</span> 100%</span>
+                <span class="connection-status">NET: <span class="status-green">CONNECTED</span></span>
+            </div>
+        </div>
+
+        <!-- Command Line Interface -->
+        <div class="cli-section">
+            <div class="cli-prompt">
+                <span class="prompt-user">root@commit-booster</span>
+                <span class="prompt-separator">:</span>
+                <span class="prompt-path">~/github-automation$</span>
+                <span class="cursor blink">█</span>
+            </div>
+        </div>
+
+        <!-- System Metrics Matrix -->
+        <div class="metrics-matrix">
+            <div class="metric-box">
+                <div class="metric-header">
+                    <i class="fas fa-terminal"></i>
+                    <span>COMMITS_TODAY</span>
                 </div>
-                <div class="stat-content">
-                    <h3 id="commits-today">0</h3>
-                    <p>Commits Today</p>
+                <div class="metric-value glitch-number" id="commits-today" data-text="0">0</div>
+                <div class="metric-bar">
+                    <div class="bar-fill" style="width: 0%"></div>
                 </div>
             </div>
             
-            <div class="stat-card">
-                <div class="stat-icon">
+            <div class="metric-box">
+                <div class="metric-header">
                     <i class="fas fa-calendar-week"></i>
+                    <span>WEEKLY_TOTAL</span>
                 </div>
-                <div class="stat-content">
-                    <h3 id="commits-week">0</h3>
-                    <p>This Week</p>
+                <div class="metric-value glitch-number" id="commits-week" data-text="0">0</div>
+                <div class="metric-bar">
+                    <div class="bar-fill" style="width: 0%"></div>
                 </div>
             </div>
             
-            <div class="stat-card">
-                <div class="stat-icon">
+            <div class="metric-box">
+                <div class="metric-header">
                     <i class="fas fa-fire"></i>
+                    <span>STREAK_DAYS</span>
                 </div>
-                <div class="stat-content">
-                    <h3 id="streak-days">0</h3>
-                    <p>Day Streak</p>
+                <div class="metric-value glitch-number" id="streak-days" data-text="0">0</div>
+                <div class="metric-bar">
+                    <div class="bar-fill streak-bar" style="width: 0%"></div>
                 </div>
             </div>
             
-            <div class="stat-card">
-                <div class="stat-icon">
+            <div class="metric-box">
+                <div class="metric-header">
                     <i class="fas fa-clock"></i>
+                    <span>NEXT_EXECUTION</span>
                 </div>
-                <div class="stat-content">
-                    <h3 id="next-push">--:--</h3>
-                    <p>Next Push</p>
+                <div class="metric-value" id="next-push">--:--:--</div>
+                <div class="countdown-ring">
+                    <div class="ring-progress"></div>
                 </div>
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="control-panel">
-                <h2><i class="fas fa-sliders-h"></i> Control Panel</h2>
+        <!-- Hacker Control Panel -->
+        <div class="hacker-controls">
+            <div class="control-section">
+                <h3 class="section-title">
+                    <i class="fas fa-code"></i> EXECUTION_PROTOCOLS
+                </h3>
                 
-                <div class="status-indicator">
-                    <div class="status-light" id="status-light"></div>
-                    <span id="status-text">Checking status...</span>
+                <div class="status-display">
+                    <div class="status-indicator">
+                        <div class="status-dot" id="status-dot"></div>
+                        <span id="status-text">INITIALIZING_SYSTEM...</span>
+                    </div>
                 </div>
 
-                <div class="button-grid">
-                    <button class="btn btn-primary" onclick="runDailyCommits()">
-                        <i class="fas fa-play"></i>
-                        Run Daily Commits
+                <div class="command-grid">
+                    <button class="hacker-btn primary-cmd" onclick="runDailyCommits()">
+                        <div class="btn-icon">▶</div>
+                        <div class="btn-text">
+                            <span>EXECUTE_DAILY</span>
+                            <small>./daily_commits.sh</small>
+                        </div>
                     </button>
                     
-                    <button class="btn btn-secondary" onclick="runMicroCommits()">
-                        <i class="fas fa-code"></i>
-                        Micro Commits
+                    <button class="hacker-btn secondary-cmd" onclick="runMicroCommits()">
+                        <div class="btn-icon">⚡</div>
+                        <div class="btn-text">
+                            <span>MICRO_BURST</span>
+                            <small>./micro_commits.sh</small>
+                        </div>
                     </button>
                     
-                    <button class="btn btn-info" onclick="runDocCommits()">
-                        <i class="fas fa-file-alt"></i>
-                        Documentation
+                    <button class="hacker-btn info-cmd" onclick="runDocCommits()">
+                        <div class="btn-icon">📄</div>
+                        <div class="btn-text">
+                            <span>DOC_UPDATE</span>
+                            <small>./documentation.sh</small>
+                        </div>
                     </button>
                     
-                    <button class="btn btn-warning" onclick="runTestCommits()">
-                        <i class="fas fa-vial"></i>
-                        Tests & Quality
+                    <button class="hacker-btn warning-cmd" onclick="runTestCommits()">
+                        <div class="btn-icon">🧪</div>
+                        <div class="btn-text">
+                            <span>TEST_SUITE</span>
+                            <small>./run_tests.sh</small>
+                        </div>
                     </button>
                     
-                    <button class="btn btn-success" onclick="forcePush()">
-                        <i class="fas fa-upload"></i>
-                        Force Push
+                    <button class="hacker-btn success-cmd" onclick="forcePush()">
+                        <div class="btn-icon">🚀</div>
+                        <div class="btn-text">
+                            <span>FORCE_PUSH</span>
+                            <small>git push --force</small>
+                        </div>
                     </button>
                     
-                    <button class="btn btn-danger" onclick="viewLogs()">
-                        <i class="fas fa-list"></i>
-                        View Logs
+                    <button class="hacker-btn danger-cmd" onclick="viewLogs()">
+                        <div class="btn-icon">📊</div>
+                        <div class="btn-text">
+                            <span>VIEW_LOGS</span>
+                            <small>tail -f system.log</small>
+                        </div>
                     </button>
                 </div>
 
-                <div class="automation-toggle">
-                    <label class="switch">
-                        <input type="checkbox" id="automation-toggle">
-                        <span class="slider"></span>
-                    </label>
-                    <span>Daily Automation</span>
+                <div class="automation-control">
+                    <div class="toggle-container">
+                        <label class="cyber-switch">
+                            <input type="checkbox" id="automation-toggle">
+                            <span class="switch-slider">
+                                <span class="switch-text">AUTO</span>
+                            </span>
+                        </label>
+                        <span class="toggle-label">AUTONOMOUS_MODE</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="activity-feed">
-                <h2><i class="fas fa-history"></i> Recent Activity</h2>
-                <div class="activity-list" id="activity-list">
-                    <!-- Activity items will be populated by JavaScript -->
+            <div class="activity-terminal">
+                <h3 class="section-title">
+                    <i class="fas fa-history"></i> SYSTEM_ACTIVITY_LOG
+                </h3>
+                <div class="terminal-output" id="activity-list">
+                    <div class="log-entry system">
+                        <span class="timestamp">[SYSTEM]</span>
+                        <span class="log-text">Initializing commit booster protocols...</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="configuration">
-            <h2><i class="fas fa-cog"></i> Configuration</h2>
+        <!-- Configuration Matrix -->
+        <div class="config-matrix">
+            <h3 class="section-title">
+                <i class="fas fa-cogs"></i> SYSTEM_CONFIGURATION
+            </h3>
             
-            <div class="config-section">
-                <label for="repo-url">Repository URL:</label>
-                <input type="text" id="repo-url" placeholder="https://github.com/username/repo.git" readonly>
-                <button class="btn btn-small" onclick="changeRepository()">Change</button>
-            </div>
-            
-            <div class="config-section">
-                <label for="commit-frequency">Daily Commit Types:</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" checked> Daily Progress</label>
-                    <label><input type="checkbox" checked> Micro Commits</label>
-                    <label><input type="checkbox"> Documentation</label>
-                    <label><input type="checkbox"> Testing</label>
-                    <label><input type="checkbox"> Refactoring</label>
+            <div class="config-grid">
+                <div class="config-item">
+                    <label class="config-label">REPOSITORY_TARGET:</label>
+                    <div class="input-group">
+                        <input type="text" id="repo-url" class="cyber-input" placeholder="https://github.com/user/repo.git" readonly>
+                        <button class="cyber-btn-small" onclick="changeRepository()">MODIFY</button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="config-section">
-                <label for="schedule-time">Schedule Time:</label>
-                <input type="time" id="schedule-time" value="09:00">
-                <button class="btn btn-small" onclick="updateSchedule()">Update</button>
+                
+                <div class="config-item">
+                    <label class="config-label">COMMIT_PROTOCOLS:</label>
+                    <div class="checkbox-matrix">
+                        <label class="cyber-checkbox">
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                            DAILY_PROGRESS
+                        </label>
+                        <label class="cyber-checkbox">
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                            MICRO_COMMITS
+                        </label>
+                        <label class="cyber-checkbox">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                            DOCUMENTATION
+                        </label>
+                        <label class="cyber-checkbox">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                            TEST_COVERAGE
+                        </label>
+                        <label class="cyber-checkbox">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                            REFACTORING
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="config-item">
+                    <label class="config-label">EXECUTION_TIME:</label>
+                    <div class="input-group">
+                        <input type="time" id="schedule-time" class="cyber-input" value="09:00">
+                        <button class="cyber-btn-small" onclick="updateSchedule()">UPDATE</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <footer>
-            <div class="footer-content">
-                <p>&copy; 2025 Commit Booster - Automated GitHub Activity Generator</p>
-                <div class="links">
-                    <a href="https://github.com/CYBERSTALKER07/Github-activity-generator" target="_blank">
-                        <i class="fab fa-github"></i> GitHub
+        <!-- Footer Terminal -->
+        <div class="terminal-footer">
+            <div class="footer-info">
+                <span class="copyright">© 2025 COMMIT_BOOSTER_SYSTEM | CLASSIFIED_PROJECT</span>
+                <div class="footer-links">
+                    <a href="https://github.com/CYBERSTALKER07/Github-activity-generator" target="_blank" class="cyber-link">
+                        <i class="fab fa-github"></i> SOURCE_CODE
                     </a>
                 </div>
             </div>
-        </footer>
+        </div>
     </div>
 
-    <!-- Loading overlay -->
-    <div class="loading-overlay" id="loading-overlay">
-        <div class="spinner"></div>
-        <p id="loading-text">Processing...</p>
+    <!-- Hacker Loading Screen -->
+    <div class="hacker-loading" id="loading-overlay">
+        <div class="loading-matrix">
+            <div class="matrix-code"></div>
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+            <p class="loading-text glitch" id="loading-text" data-text="PROCESSING...">PROCESSING...</p>
+        </div>
     </div>
 
-    <!-- Notification container -->
-    <div class="notification-container" id="notification-container"></div>
+    <!-- Notification System -->
+    <div class="notification-matrix" id="notification-container"></div>
 
     <script src="script.js"></script>
 </body>
