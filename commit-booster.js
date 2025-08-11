@@ -52,13 +52,21 @@ class CommitBooster {
     }
 
     updateDailyLog(date) {
-        const logEntry = `\n## ${date}\n- Project maintenance and improvements\n- Code quality enhancements\n- Documentation updates\n`;
-        
-        if (!fs.existsSync(this.logFile)) {
+        const header = `## ${date}`;
+        let needsHeader = true;
+        if (fs.existsSync(this.logFile)) {
+            const content = fs.readFileSync(this.logFile, 'utf8');
+            needsHeader = !content.includes(header + '\n');
+        } else {
             fs.writeFileSync(this.logFile, '# Daily Progress Log\n');
         }
-        
+        if (!needsHeader) {
+            // Avoid duplicating the same day section
+            return false; // indicate unchanged
+        }
+        const logEntry = `\n${header}\n- Project maintenance and improvements\n- Code quality enhancements\n- Documentation updates\n`;
         fs.appendFileSync(this.logFile, logEntry);
+        return true; // changed
     }
 
     addTodoItem(task) {
@@ -74,9 +82,46 @@ class CommitBooster {
     commitFile(filePath, message) {
         try {
             execSync(`git add "${filePath}"`, { stdio: 'pipe' });
+            // Skip commit if no diff for this file
+            const diffExit = (() => {
+                try {
+                    execSync(`git diff --cached --quiet -- "${filePath}"`);
+                    return 0; // no changes
+                } catch (e) {
+                    return 1; // has changes
+                }
+            })();
+            if (diffExit === 0) {
+                console.log(`⏭️  Skipped commit (no changes): ${path.basename(filePath)}`);
+                return;
+            }
             execSync(`git commit -m "${message}"`, { stdio: 'pipe' });
             console.log(`📝 Committed: ${message}`);
         } catch (error) {
+            // Handle stale index.lock scenario
+            if (error.message && error.message.includes('index.lock')) {
+                const lockPath = path.join(this.projectRoot, '.git', 'index.lock');
+                try {
+                    const stat = fs.statSync(lockPath);
+                    const ageMs = Date.now() - stat.mtimeMs;
+                    if (ageMs > 60000) {
+                        fs.unlinkSync(lockPath);
+                        console.log('🧹 Removed stale git index.lock (age ' + Math.round(ageMs/1000) + 's)');
+                        try {
+                            execSync(`git add "${filePath}"`, { stdio: 'pipe' });
+                            execSync(`git diff --cached --quiet -- "${filePath}"`) || execSync(`git commit -m "${message}"`, { stdio: 'pipe' });
+                            console.log(`📝 Committed after lock recovery: ${message}`);
+                            return;
+                        } catch (retryErr) {
+                            console.log('⚠️  Retry after lock removal failed:', retryErr.message);
+                        }
+                    } else {
+                        console.log('⏳ Active git operation detected (index.lock fresh). Skipping commit for now.');
+                    }
+                } catch (lockErr) {
+                    console.log('⚠️  Could not inspect/remove index.lock:', lockErr.message);
+                }
+            }
             // If commit fails, it might be because there are no changes
             if (!error.message.includes('nothing to commit')) {
                 console.log(`ℹ️  Note: ${error.message}`);
