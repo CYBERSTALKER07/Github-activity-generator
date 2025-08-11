@@ -118,3 +118,6 @@ This project follows JavaScript ES6+ conventions and focuses on creating meaning
 
 <!-- docs update 2025-08-11T10:51:28.988Z -->
 Minor documentation touch-up.
+
+<!-- docs update 2025-08-11T10:56:28.472Z -->
+Minor documentation touch-up.
