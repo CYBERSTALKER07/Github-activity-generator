@@ -339,6 +339,10 @@ class CyberCommitBooster {
         if (dailyBar) {
             const dailyPercent = Math.min((stats.today / 50) * 100, 100);
             dailyBar.style.width = `${dailyPercent}%`;
+        }
+
+        if (weeklyBar) {
+            const weeklyPercent = Math.min((stats.week / 350) * 100, 100);
             weeklyBar.style.width = `${weeklyPercent}%`;
         }
 
