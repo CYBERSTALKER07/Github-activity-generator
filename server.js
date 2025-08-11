@@ -3,15 +3,30 @@ const path = require('path');
 const { execSync } = require('child_process');
 const fs = require('fs');
 
-// Import CommitBooster class
+// Import the commit booster
 const CommitBooster = require('./commit-booster');
 
-// Initialize CommitBooster instance
-const booster = new CommitBooster();
-
 const app = express();
-const PORT = process.env.PORT || 3001;
+// Enhanced port configuration with fallback ports to handle conflicts
+const PORT = process.env.PORT || findAvailablePort([3000, 3001, 3002, 3003, 8000, 8080]);
 const NODE_ENV = process.env.NODE_ENV || 'development';
+
+// Initialize commit booster
+let commitBooster = null;
+let booster = null; // Legacy reference for compatibility
+
+// Initialize commit booster on startup
+async function initializeCommitBooster() {
+    try {
+        commitBooster = new CommitBooster();
+        booster = commitBooster; // Set legacy reference
+        console.log('🚀 Commit Booster initialized successfully');
+        return true;
+    } catch (error) {
+        console.error('❌ Commit Booster initialization failed:', error.message);
+        return false;
+    }
+}
 
 // Middleware
 app.use(express.json());
@@ -477,15 +492,94 @@ function getCommitIcon(message) {
 // Export for Vercel
 module.exports = app;
 
-// Start server only if not in serverless environment
-if (NODE_ENV !== 'production' || !process.env.VERCEL) {
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`🚀 Commit Booster Dashboard running on port ${PORT}`);
-        console.log(`🌍 Environment: ${NODE_ENV}`);
-        if (NODE_ENV === 'development') {
-            console.log(`📊 Local Dashboard: http://localhost:${PORT}`);
+// Enhanced port finding function to avoid conflicts
+function findAvailablePort(ports) {
+    const net = require('net');
+    
+    for (const port of ports) {
+        try {
+            // Synchronously check if port is available
+            const server = net.createServer();
+            let isAvailable = false;
+            
+            server.on('error', () => {
+                isAvailable = false;
+            });
+            
+            server.on('listening', () => {
+                isAvailable = true;
+                server.close();
+            });
+            
+            server.listen(port, '127.0.0.1');
+            
+            // Use a simple synchronous check instead
+            const { execSync } = require('child_process');
+            try {
+                execSync(`lsof -ti:${port}`, { stdio: 'pipe' });
+                // Port is occupied
+                continue;
+            } catch (error) {
+                // Port is free
+                return port;
+            }
+        } catch (error) {
+            continue;
         }
-        console.log(`🔌 API Base: /api`);
-        console.log(`❤️  Health Check: /health`);
+    }
+    
+    // If all predefined ports are busy, use a random high port
+    return Math.floor(Math.random() * (9999 - 8000) + 8000);
+}
+
+// Start server with proper error handling and port detection
+if (require.main === module) {
+    // Only start server if this file is run directly
+    const availablePort = findAvailablePort([3000, 3001, 3002, 3003, 8000, 8080, 9000]);
+    
+    const server = app.listen(availablePort, async () => {
+        console.log(`🚀 Commit Booster Server running on port ${availablePort}`);
+        console.log(`📂 Working directory: ${__dirname}`);
+        console.log(`🌐 Access dashboard at: http://localhost:${availablePort}`);
+        
+        // Initialize commit booster on startup
+        const initialized = await initializeCommitBooster();
+        if (initialized) {
+            console.log('✅ Server initialization complete');
+            console.log('🎯 Commits and auto commits are now fully functional!');
+            console.log('');
+            console.log('Available commands:');
+            console.log('  POST /api/execute/daily    - Generate daily commits');
+            console.log('  POST /api/execute/auto     - Auto commit and push');
+            console.log('  POST /api/execute/micro    - Create micro commits');
+            console.log('  GET  /api/stats           - View commit statistics');
+            console.log('  GET  /api/activity        - View recent activity');
+        } else {
+            console.warn('⚠️  Server started but commit booster initialization failed');
+        }
+    }).on('error', (err) => {
+        console.error('❌ Server startup failed:', err.message);
+        if (err.code === 'EADDRINUSE') {
+            console.log('💡 Try running: pkill -f "node.*server" to clear processes');
+            console.log('💡 Or use a different port: PORT=8080 node server.js');
+        }
+        process.exit(1);
+    });
+
+    // Graceful shutdown
+    process.on('SIGTERM', () => {
+        console.log('🛑 Received SIGTERM signal, shutting down gracefully');
+        server.close(() => {
+            console.log('✅ Server closed successfully');
+            process.exit(0);
+        });
+    });
+
+    process.on('SIGINT', () => {
+        console.log('\n🛑 Received SIGINT signal, shutting down gracefully');
+        server.close(() => {
+            console.log('✅ Server closed successfully');
+            process.exit(0);
+        });
     });
 }
