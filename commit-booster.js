@@ -441,8 +441,132 @@ module.exports = {
             return { today: 0, week: 0, month: 0, total: 0 };
         }
     }
+
+    // === Newly added helper for ensuring git repo before batch runs ===
+    ensureGit() {
+        try {
+            execSync('git status', { stdio: 'pipe' });
+        } catch (e) {
+            this.initGit();
+        }
+    }
+
+    // === New command: documentation update ===
+    generateDocsUpdate() {
+        try {
+            this.ensureGit();
+            const readme = path.join(this.projectRoot, 'README.md');
+            const stamp = `\n<!-- docs update ${new Date().toISOString()} -->\n`;
+            if (!fs.existsSync(readme)) fs.writeFileSync(readme, '# Project README\n');
+            fs.appendFileSync(readme, stamp + 'Minor documentation touch-up.\n');
+            this.commitFile(readme, 'docs: update documentation timestamp');
+            console.log('✅ Docs update committed');
+        } catch (e) {
+            console.error('❌ Docs update failed:', e.message);
+        }
+    }
+
+    // === New command: tests improvement ===
+    improveTests() {
+        try {
+            this.ensureGit();
+            const testFile = path.join(this.projectRoot, 'test-improvements.spec.js');
+            const content = `// Auto-generated test improvements\n// ${new Date().toISOString()}\n\nfunction dummyTest() { return true; }\nmodule.exports = { dummyTest };\n`;
+            fs.writeFileSync(testFile, content);
+            this.commitFile(testFile, 'test: add/improve dummy tests');
+            console.log('✅ Test improvements committed');
+        } catch (e) {
+            console.error('❌ Test update failed:', e.message);
+        }
+    }
+
+    // === New command: refactor placeholder ===
+    performRefactor() {
+        try {
+            this.ensureGit();
+            const refactorFile = path.join(this.projectRoot, 'refactor-notes.md');
+            fs.appendFileSync(refactorFile, `\n${new Date().toISOString()} - Minor internal refactor notes.\n`);
+            this.commitFile(refactorFile, 'refactor: minor internal improvements');
+            console.log('✅ Refactor notes committed');
+        } catch (e) {
+            console.error('❌ Refactor failed:', e.message);
+        }
+    }
+
+    // === New command: bugfix placeholder ===
+    applyBugFix() {
+        try {
+            this.ensureGit();
+            const fixFile = path.join(this.projectRoot, 'BUGFIX_LOG.md');
+            fs.appendFileSync(fixFile, `\n${new Date().toISOString()} - Patched minor issue placeholder.\n`);
+            this.commitFile(fixFile, 'fix: patch minor placeholder issue');
+            console.log('✅ Bug fix committed');
+        } catch (e) {
+            console.error('❌ Bugfix failed:', e.message);
+        }
+    }
+
+    // === New command: maintenance placeholder ===
+    performMaintenance() {
+        try {
+            this.ensureGit();
+            const maintenanceFile = path.join(this.projectRoot, 'MAINTENANCE.md');
+            fs.appendFileSync(maintenanceFile, `\n${new Date().toISOString()} - Routine maintenance entry.\n`);
+            this.commitFile(maintenanceFile, 'chore: routine maintenance');
+            console.log('✅ Maintenance committed');
+        } catch (e) {
+            console.error('❌ Maintenance failed:', e.message);
+        }
+    }
+
+    // === New command: feature stub ===
+    addFeatureStub() {
+        try {
+            this.ensureGit();
+            const featureFile = path.join(this.projectRoot, `feature-${Date.now()}.js`);
+            const content = `// Feature stub generated ${new Date().toISOString()}\nmodule.exports = () => 'feature stub';\n`;
+            fs.writeFileSync(featureFile, content);
+            this.commitFile(featureFile, 'feat: add feature stub');
+            console.log('✅ Feature stub committed');
+        } catch (e) {
+            console.error('❌ Feature stub failed:', e.message);
+        }
+    }
+
+    // === New batch scheduler (simplified) ===
+    async runBatch(days = 7, min = 1, max = 3, microChance = 30, includePush = false) {
+        this.ensureGit();
+        days = parseInt(days); min = parseInt(min); max = parseInt(max); microChance = parseInt(microChance);
+        console.log(`🗓️  Running batch for ${days} days (min ${min}, max ${max}, microChance ${microChance}%)`);
+        for (let d = 0; d < days; d++) {
+            const commitCount = Math.max(min, Math.min(max, Math.floor(Math.random() * (max - min + 1)) + min));
+            for (let c = 0; c < commitCount; c++) {
+                await this.generateDailyCommit();
+                if (Math.random() * 100 < microChance) this.createMicroCommits();
+            }
+        }
+        if (includePush) await this.pushToRemote();
+        console.log('✅ Batch run complete');
+    }
+
+    // === High volume variant with burst logic ===
+    async runHighVolume(days = 30, min = 1, max = 5, microChance = 40, burstChance = 20, includePush = false) {
+        this.ensureGit();
+        console.log(`🚀 High-volume run: days=${days} min=${min} max=${max} micro=${microChance}% burst=${burstChance}%`);
+        for (let d = 0; d < days; d++) {
+            let commitCount = Math.floor(Math.random() * (max - min + 1)) + min;
+            if (Math.random() * 100 < burstChance) commitCount += Math.floor(Math.random() * 5) + 3; // burst
+            for (let c = 0; c < commitCount; c++) {
+                await this.generateDailyCommit();
+                if (Math.random() * 100 < microChance) this.createMicroCommits();
+            }
+        }
+        if (includePush) await this.pushToRemote();
+        console.log('✅ High-volume run complete');
+    }
 }
 
+// Export class for external usage
 module.exports = CommitBooster;
 
 // CLI Interface
@@ -451,59 +575,65 @@ if (require.main === module) {
     const command = process.argv[2];
 
     switch (command) {
-        case 'daily':
-            booster.generateDailyCommit();
+    case 'daily':
+        booster.generateDailyCommit();
+        break;
+    case 'micro':
+        booster.createMicroCommits();
+        break;
+    case 'init':
+        booster.initGit();
+        break;
+    case 'stats':
+        booster.getDetailedStats();
+        break;
+    case 'push':
+        booster.pushToRemote();
+        break;
+    case 'setup-remote':
+        if (!process.argv[3]) {
+            console.log('❌ Please provide a repository URL');
+            console.log('Example: node commit-booster.js setup-remote https://github.com/username/repo.git');
             break;
-        case 'micro':
-            booster.createMicroCommits();
-            break;
-        case 'init':
-            booster.initGit();
-            break;
-        case 'stats':
-            booster.getDetailedStats();
-            break;
-        case 'push':
-            booster.pushToRemote();
-            break;
-        case 'setup-remote':
-            if (!process.argv[3]) {
-                console.log('❌ Please provide a repository URL');
-                console.log('Example: node commit-booster.js setup-remote https://github.com/username/repo.git');
-                break;
-            }
-            booster.setupRemote(process.argv[3]);
-            break;
-        case 'auto':
-            booster.runDailyAutomation();
-            break;
-        case 'force-push':
-            booster.forcePushToday();
-            break;
-        case 'status':
-            booster.getAutomationStatus();
-            break;
-        default:
-            console.log(`
-🚀 Commit Booster - Automated Daily GitHub Commits
-
-Basic Commands:
-  node commit-booster.js daily              Generate daily meaningful commits
-  node commit-booster.js micro              Create multiple micro-commits
-  node commit-booster.js init               Initialize git repository
-  node commit-booster.js stats              Show detailed commit statistics
-  node commit-booster.js push               Push commits to remote repository
-  node commit-booster.js setup-remote <url> Setup remote repository
-
-Automation Commands:
-  node commit-booster.js auto               🤖 Smart daily automation (respects schedule)
-  node commit-booster.js force-push         ⚡ Force push today (ignores schedule)  
-  node commit-booster.js status             📊 Show automation status and schedule
-
-Examples:
-  node commit-booster.js setup-remote https://github.com/username/repo.git
-  node commit-booster.js auto               # Run smart daily automation
-  node commit-booster.js status             # Check when next push is due
-`);
+        }
+        booster.setupRemote(process.argv[3]);
+        break;
+    case 'auto':
+        booster.runDailyAutomation();
+        break;
+    case 'force-push':
+        booster.forcePushToday();
+        break;
+    case 'status':
+        booster.getAutomationStatus();
+        break;
+    case 'docs':
+        booster.generateDocsUpdate();
+        break;
+    case 'tests':
+        booster.improveTests();
+        break;
+    case 'refactor':
+        booster.performRefactor();
+        break;
+    case 'bugfix':
+        booster.applyBugFix();
+        break;
+    case 'maintenance':
+        booster.performMaintenance();
+        break;
+    case 'feature':
+        booster.addFeatureStub();
+        break;
+    case 'batch': {
+        const [days, min, max, microChance, includePush] = process.argv.slice(3);
+        booster.runBatch(days, min, max, microChance, includePush === 'true');
+        break; }
+    case 'high-volume': {
+        const [days, min, max, microChance, burstChance, includePush] = process.argv.slice(3);
+        booster.runHighVolume(days, min, max, microChance, burstChance, includePush === 'true');
+        break; }
+    default:
+        console.log(`\n🚀 Commit Booster - Automated Daily GitHub Commits\n\nBasic Commands:\n  node commit-booster.js daily              Generate daily meaningful commits\n  node commit-booster.js micro              Create multiple micro-commits\n  node commit-booster.js docs               Documentation update commit\n  node commit-booster.js tests              Test improvement commit\n  node commit-booster.js refactor           Refactor placeholder commit\n  node commit-booster.js bugfix             Bug fix placeholder commit\n  node commit-booster.js feature            Feature stub commit\n  node commit-booster.js maintenance        Maintenance (chore) commit\n  node commit-booster.js stats              Show detailed commit statistics\n  node commit-booster.js push               Push commits to remote repository\n  node commit-booster.js setup-remote <url> Setup remote repository\n\nAutomation Commands:\n  node commit-booster.js auto               🤖 Smart daily automation (respects schedule)\n  node commit-booster.js force-push         ⚡ Force push today (ignores schedule)  \n  node commit-booster.js status             📊 Show automation status and schedule\n  node commit-booster.js batch <d> <min> <max> <micro%> <push?>  Batch generate\n  node commit-booster.js high-volume <d> <min> <max> <micro%> <burst%> <push?> High volume\n`);
     }
 }

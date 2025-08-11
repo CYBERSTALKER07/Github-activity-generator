@@ -2,7 +2,11 @@
 // Advanced terminal-style JavaScript with matrix effects
 
 // API Configuration
-const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3001' : '';
+// Previously hardcoded to port 3001 causing CONNECTION_ERROR_DETECTED when server runs on 3000.
+// Use same-origin relative paths so frontend and backend stay aligned regardless of port.
+const API_BASE = ''; // same-origin
+// If you need to force a different backend, uncomment below:
+// const API_BASE = `${window.location.protocol}//${window.location.hostname}:${window.location.port || '3000'}`;
 
 class CyberCommitBooster {
     constructor() {
@@ -335,10 +339,6 @@ class CyberCommitBooster {
         if (dailyBar) {
             const dailyPercent = Math.min((stats.today / 50) * 100, 100);
             dailyBar.style.width = `${dailyPercent}%`;
-        }
-
-        if (weeklyBar) {
-            const weeklyPercent = Math.min((stats.week / 350) * 100, 100);
             weeklyBar.style.width = `${weeklyPercent}%`;
         }
 

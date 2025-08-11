@@ -1,6 +1,7 @@
 {
   "watch": [
     "server.js",
+    "commit-booster.js",
     "frontend/"
   ],
   "ignore": [
