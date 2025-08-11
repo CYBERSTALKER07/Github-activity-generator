@@ -115,3 +115,6 @@ This project follows JavaScript ES6+ conventions and focuses on creating meaning
 *Last Updated: 2025-07-21*
 *Build Status: ✅ Operational*
 *Version: 1.0.0*
+
+<!-- docs update 2025-08-11T10:51:28.988Z -->
+Minor documentation touch-up.
